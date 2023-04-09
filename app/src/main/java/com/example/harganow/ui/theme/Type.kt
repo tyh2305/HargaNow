@@ -1,4 +1,4 @@
-package com.example.verifycompose.ui.theme
+package com.example.harganow.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

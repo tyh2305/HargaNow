@@ -1,4 +1,4 @@
-package com.example.verifycompose
+package com.example.harganow
 
 import org.junit.Test
 

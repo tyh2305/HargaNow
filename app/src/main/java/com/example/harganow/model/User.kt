@@ -1,4 +1,4 @@
-package com.example.verifycompose.data
+package com.example.harganow.model
 
 data class User(
     val id: String,
