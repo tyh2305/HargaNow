@@ -1,10 +1,6 @@
 package com.example.harganow.model
 
-data class User(
-    val id: String,
+data class Contact(
     val name: String,
     val email: String,
 )
-
-
-

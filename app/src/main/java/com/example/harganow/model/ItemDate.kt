@@ -1,0 +1,38 @@
+package com.example.harganow.model
+
+data class ItemDate(
+    var day: Int,
+    var month: Int,
+    var year: Int,
+) {
+    companion object {
+        fun fromString(input: String): ItemDate? {
+            // Use regex to validate input
+            var reg = Regex("^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}\$")
+            if (reg.matches(input)) {
+                val date = input.split("/")
+                val day = date[0].toInt()
+                val month = date[1].toInt()
+                val year = date[2].toInt()
+                return ItemDate(day, month, year)
+            } else {
+                return null
+            }
+        }
+
+        fun fromDate(date: java.util.Date): ItemDate {
+            val cal = java.util.Calendar.getInstance()
+            cal.time = date
+            return ItemDate(
+                cal.get(java.util.Calendar.DAY_OF_MONTH),
+                cal.get(java.util.Calendar.MONTH),
+                cal.get(java.util.Calendar.YEAR)
+            )
+        }
+
+        fun toString(date: ItemDate): String {
+            return "${date.day}/${date.month}/${date.year}"
+        }
+    }
+}
+

@@ -8,6 +8,5 @@ data class Item(
     val unit: String,
     val group: String,
     val category: String,
-    val img: String = ImageGetter.GetImage(id),
 )
 
