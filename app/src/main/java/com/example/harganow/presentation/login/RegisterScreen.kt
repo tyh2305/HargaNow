@@ -38,7 +38,7 @@ fun RegisterScreen(
     ) {
         Button(
             onClick = {
-                // TODO: Back to main screen
+                navigateToHome()
             },
             modifier = Modifier
                 .padding(vertical = 8.dp),

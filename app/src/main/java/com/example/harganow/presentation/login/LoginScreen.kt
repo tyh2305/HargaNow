@@ -13,7 +13,8 @@ import com.example.harganow.R
 
 @Composable
 fun LoginScreen(
-    navigateToHome: () -> Unit
+    navigateToHome: () -> Unit,
+    navigateToRegister: () -> Unit,
 ) {
 //    val authViewModel: AuthViewModel = viewModel()
 
@@ -31,7 +32,7 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                // TODO: Back to main screen
+                navigateToHome()
             },
             modifier = Modifier
                 .padding(vertical = 8.dp),
@@ -129,6 +130,7 @@ fun LoginScreen(
         OutlinedButton(
             onClick = {
                 // TODO : Navigate to sign up screen
+                navigateToRegister()
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -141,6 +143,7 @@ fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     LoginScreen(
-        navigateToHome = { /* TODO */ }
+        navigateToHome = { /* TODO */ },
+        navigateToRegister = { /* TODO */ }
     )
 }
