@@ -1,26 +1,32 @@
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.harganow.R
 import com.example.harganow.data.auth.FireAuthRepository
 import com.example.harganow.presentation.login.AuthViewModel
 import com.example.harganow.data.auth.Result
 
 @Composable
 fun RegisterScreen(
+    navigateToHome: () -> Unit
 ) {
-    val authViewModel: AuthViewModel = viewModel()
+//    val authViewModel: AuthViewModel = viewModel()
 
+    var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val loginResult = authViewModel.loginResult
+//    val loginResult = authViewModel.loginResult
     val context = LocalContext.current
 
     fun handleCallback(result: Result<Unit>): Unit {}
@@ -30,16 +36,44 @@ fun RegisterScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "Login",
-            style = MaterialTheme.typography.h4,
-            modifier = Modifier.padding(vertical = 32.dp)
+        Button(
+            onClick = {
+                // TODO: Back to main screen
+            },
+            modifier = Modifier
+                .padding(vertical = 8.dp),
+        ) {
+            Text(
+                text = "<",
+            )
+        }
+
+        // TODO: Change the size of the image
+        Image(
+            painter = painterResource(id = R.drawable.signup_image),
+            contentDescription = "Sign Up Image",
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(vertical = 16.dp)
         )
+
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Name") },
+            leadingIcon = { Icon(painterResource(id = R.drawable.person_black_24dp), contentDescription = "Email") },
+            placeholder = { Text("Your Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
+            leadingIcon = { Icon(painterResource(id = R.drawable.email_black_24dp), contentDescription = "Email") },
+            placeholder = { Text("harganow@example.com") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -49,11 +83,12 @@ fun RegisterScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
+            leadingIcon = { Icon(painterResource(id = R.drawable.lock_black_24dp), contentDescription = "Password") },
+            placeholder = { Text("Your Password") },
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
+        Spacer(modifier = Modifier.height(45.dp))
 
         Button(
             onClick = {
@@ -64,35 +99,62 @@ fun RegisterScreen(
                     return@Button
                 }
 
-                authViewModel.register(email, password) { result ->
-                    when (result) {
-                        is Result.Success -> {
-                            // Handle successful registration
-                            Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-
-                        is Result.Failure -> {
-                            // Handle registration error
-                            Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
-                }
+//                authViewModel.register(email, password) { result ->
+//                    when (result) {
+//                        is Result.Success -> {
+//                            // Handle successful registration
+//                            Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
+//                                .show()
+//                        }
+//
+//                        is Result.Failure -> {
+//                            // Handle registration error
+//                            Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
+//                                .show()
+//                        }
+//                    }
+//                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Register")
+            Text(text = "Sign Up")
         }
 
-        TextButton(
-            onClick = { /* TODO */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(8.dp)
         ) {
-            Text(text = "Already have an account? Log In")
+            Divider(
+                thickness = 3.dp,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "or",
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Divider(
+                thickness = 3.dp,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        OutlinedButton(
+            onClick = {
+                // TODO : Navigate to login in screen
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Log In")
         }
     }
+
+
+}
+@Preview
+@Composable
+fun RegisterScreenPreview() {
+    RegisterScreen(
+        navigateToHome = { /* TODO */ }
+    )
 }
 

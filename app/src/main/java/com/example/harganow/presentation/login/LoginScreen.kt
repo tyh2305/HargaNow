@@ -1,27 +1,26 @@
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.harganow.data.auth.FireAuthRepository
-import com.example.harganow.presentation.login.AuthViewModel
-import com.example.harganow.data.auth.Result
+import com.example.harganow.R
 
 @Composable
 fun LoginScreen(
     navigateToHome: () -> Unit
 ) {
-    val authViewModel: AuthViewModel = viewModel()
+//    val authViewModel: AuthViewModel = viewModel()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val loginResult = authViewModel.loginResult
+//    val loginResult = authViewModel.loginResult
     val context = LocalContext.current
 
     Column(
@@ -29,16 +28,34 @@ fun LoginScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "Login",
-            style = MaterialTheme.typography.h4,
-            modifier = Modifier.padding(vertical = 32.dp)
+
+        Button(
+            onClick = {
+                // TODO: Back to main screen
+            },
+            modifier = Modifier
+                .padding(vertical = 8.dp),
+        ) {
+            Text(
+                text = "<",
+            )
+        }
+
+        // TODO: Change the size of the image
+        Image(
+            painter = painterResource(id = R.drawable.login_image),
+            contentDescription = "Login Image",
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(vertical = 16.dp)
         )
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
+            leadingIcon = { Icon(painterResource(id = R.drawable.email_black_24dp), contentDescription = "Email") },
+            placeholder = { Text("harganow@example.com") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -48,11 +65,21 @@ fun LoginScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
+            leadingIcon = { Icon(painterResource(id = R.drawable.lock_black_24dp), contentDescription = "Password") },
+            placeholder = { Text("Your Password") },
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        TextButton(
+            onClick = { /* TODO: Reset password */ },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text(
+                text = "Forget Password?"
+            )
+        }
 
+        Spacer(modifier = Modifier.height(32.dp))
 
         Button(
             onClick = {
@@ -63,31 +90,49 @@ fun LoginScreen(
                     return@Button
                 }
 
-                authViewModel.login(email, password)
-                authViewModel.loginResult?.let {
-                    if (it is Result.Success) {
-                        Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
-                            .show()
-                        navigateToHome()
-                    } else {
-//                      TODO: Check whether account is register
-                        Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
+//                authViewModel.login(email, password)
+//                authViewModel.loginResult?.let {
+//                    if (it is Result.Success) {
+//                        Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
+//                            .show()
+//                        navigateToHome()
+//                    } else {
+////                      TODO: Check whether account is register
+//                        Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
+//                            .show()
+//                    }
+//                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Login")
+            Text(text = "Log In")
         }
 
-        TextButton(
-            onClick = { /* TODO */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(8.dp)
         ) {
-            Text(text = "Don't have an account? Sign up")
+            Divider(
+                thickness = 3.dp,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "or",
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Divider(
+                thickness = 3.dp,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        OutlinedButton(
+            onClick = {
+                // TODO : Navigate to sign up screen
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Sign Up")
         }
     }
 }
