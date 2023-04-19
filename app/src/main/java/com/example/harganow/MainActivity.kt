@@ -21,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.harganow.presentation.cart.components.CartItem
 import com.example.harganow.presentation.cart.components.CartItemPreview
+import com.example.harganow.presentation.user.UserSettingsScreen
+import com.example.harganow.presentation.user.UserSettingsScreenPreview
 import com.example.harganow.ui.theme.VerifyComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
@@ -36,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    LoginScreenPreview()
+                    UserSettingsScreenPreview()
                 }
             }
         }
