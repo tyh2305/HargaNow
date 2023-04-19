@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.harganow.R
+import com.example.harganow.presentation.components.Header
 import com.example.harganow.ui.theme.Orange
 
 @Composable

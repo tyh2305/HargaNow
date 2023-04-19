@@ -13,46 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.harganow.R
+import com.example.harganow.presentation.components.Header
 import com.example.harganow.ui.theme.Orange
-
-@Composable
-fun Header(title: String, titleSize: Int, navigateToPreviousStack: () -> Unit) {
-    Column() {
-        TopAppBar(
-            modifier = Modifier
-                .height(75.dp),
-            backgroundColor = Color.White,
-            title = {
-                Text(
-                    text = title,
-                    modifier = Modifier.padding(horizontal = titleSize.dp),
-                    textAlign = TextAlign.Center,
-                )
-            } ,
-            navigationIcon = {
-                Button(
-                    onClick = {
-                        navigateToPreviousStack()
-                    },
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(40.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Orange)
-                ) {
-                    Text(
-                        text = "<",
-                        color = Color.White,
-                    )
-                }
-            },
-        )
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(2.dp)
-            .background(Color.Black.copy(alpha = 0.2f)))
-    }
-
-}
 
 @Composable
 fun SettingsCard(title: String, cardHeight:Int, iconID:Int, onClick: () -> Unit) {
