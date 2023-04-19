@@ -58,28 +58,6 @@ fun Header(title: String, titleSize: Int,navigateToHome: () -> Unit) {
 }
 
 @Composable
-fun Card(cardHeight: Int, onClick: () -> Unit)
-{
-    Box(
-        modifier = Modifier
-            .clickable { onClick() }
-            .fillMaxWidth()
-            .background(Color.White)
-            .height(cardHeight.dp)
-    ) {
-        Column {
-            Row {
-
-            }
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(2.dp)
-                .background(Color.Black.copy(alpha = 0.2f)))
-        }
-    }
-}
-
-@Composable
 fun SettingsCard(title: String, cardHeight:Int, iconID:Int, onClick: () -> Unit) {
     Box(
         modifier = Modifier
