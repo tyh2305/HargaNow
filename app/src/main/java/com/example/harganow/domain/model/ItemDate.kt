@@ -7,6 +7,9 @@ data class ItemDate(
     var month: Int,
     var year: Int,
 ) {
+
+    constructor() : this(0, 0, 0)
+
     companion object {
         fun fromString(input: String): ItemDate? {
             // Use regex to validate input

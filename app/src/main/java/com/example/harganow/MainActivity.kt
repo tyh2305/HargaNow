@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.harganow.presentation.cart.CartScreen
 import com.example.harganow.presentation.cart.components.CartItem
 import com.example.harganow.presentation.cart.components.CartItemPreview
 import com.example.harganow.presentation.user.UserSettingsScreen
@@ -38,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    UserSettingsScreenPreview()
+                    CartScreen()
                 }
             }
         }

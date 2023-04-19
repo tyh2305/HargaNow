@@ -5,4 +5,6 @@ data class ItemPrice(
     var premise: Premise,
     var price: Double,
     var date: ItemDate,
-)
+) {
+    constructor() : this(Item(), Premise(), 0.0, ItemDate())
+}
