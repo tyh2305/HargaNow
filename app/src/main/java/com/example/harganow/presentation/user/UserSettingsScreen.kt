@@ -1,7 +1,5 @@
 package com.example.harganow.presentation.user
 
-import android.graphics.drawable.Icon
-import android.view.animation.PathInterpolator
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,9 +15,8 @@ import androidx.compose.ui.unit.sp
 import com.example.harganow.R
 import com.example.harganow.ui.theme.Orange
 
-
 @Composable
-fun Header(title: String, titleSize: Int,navigateToHome: () -> Unit) {
+fun Header(title: String, titleSize: Int, navigateToPreviousStack: () -> Unit) {
     Column() {
         TopAppBar(
             modifier = Modifier
@@ -35,7 +32,7 @@ fun Header(title: String, titleSize: Int,navigateToHome: () -> Unit) {
             navigationIcon = {
                 Button(
                     onClick = {
-                        navigateToHome()
+                        navigateToPreviousStack()
                     },
                     modifier = Modifier
                         .padding(16.dp)
@@ -89,8 +86,9 @@ fun SettingsCard(title: String, cardHeight:Int, iconID:Int, onClick: () -> Unit)
 
 @Composable
 fun UserSettingsScreen(
+    navigateToPreviousStack: () -> Unit,
     navigateToManageAccount: () -> Unit,
-    navigateToEmail: () -> Unit,
+    navigateToAddress: () -> Unit,
     navigateToBankAccount: () -> Unit,
     navigateToPolicy: () -> Unit,
     navigateToHome: () -> Unit,
@@ -101,17 +99,17 @@ fun UserSettingsScreen(
             .background(Color.White)
     ) {
 
-        Header(title = "User Settings", titleSize = 64, navigateToHome = navigateToHome)
+        Header(title = "User Settings", titleSize = 64, navigateToPreviousStack = navigateToPreviousStack)
         SettingsCard(title = "Manage Account", 60,
             R.drawable.manage_accounts_black_24dp,  onClick = navigateToManageAccount)
         SettingsCard(title = "Edit Address",60,
-            R.drawable.location_on_black_24dp, onClick = navigateToManageAccount)
+            R.drawable.location_on_black_24dp, onClick = navigateToAddress)
         SettingsCard(title = "Bank Accounts / Cards", 60,
-            R.drawable.account_balance_wallet_black_24dp, onClick = navigateToManageAccount)
+            R.drawable.account_balance_wallet_black_24dp, onClick = navigateToBankAccount)
         SettingsCard(title = "Policy", 60,
-            R.drawable.policy_black_24dp, onClick = navigateToManageAccount)
+            R.drawable.policy_black_24dp, onClick = navigateToPolicy)
         SettingsCard(title = "Logout", 60,
-            R.drawable.logout_black_24dp, onClick = navigateToManageAccount)
+            R.drawable.logout_black_24dp, onClick = navigateToHome)
     }
 }
 
@@ -121,8 +119,9 @@ fun UserSettingsScreen(
 fun UserSettingsScreenPreview()
 {
     UserSettingsScreen(
+        navigateToPreviousStack = {},
         navigateToManageAccount = {},
-        navigateToEmail = {},
+        navigateToAddress = {},
         navigateToBankAccount = {},
         navigateToPolicy = {},
         navigateToHome = {},

@@ -38,7 +38,7 @@ fun HomeScreen(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(16.dp)
-                .size(300.dp)
+                .size(200.dp)
         )
 
         Spacer(modifier = Modifier.padding(45.dp))

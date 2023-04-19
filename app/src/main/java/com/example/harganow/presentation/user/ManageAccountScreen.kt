@@ -49,7 +49,7 @@ fun Card(title:String, info:String, cardHeight: Int, onClick: () -> Unit)
 
 @Composable
 fun ManageAccountScreen(
-    navigateToHome: () -> Unit,
+    navigateToPreviousStack: () -> Unit,
     navigateToName: () -> Unit,
     navigateToEmail: () -> Unit,
     navigateToVerifyPassword: () -> Unit,
@@ -60,7 +60,7 @@ fun ManageAccountScreen(
             .background(Color.White)
     ) {
 
-        Header(title = "Manage Account", titleSize = 64, navigateToHome = navigateToHome)
+        Header(title = "Manage Account", titleSize = 64, navigateToPreviousStack = navigateToPreviousStack)
         Card(title = "Name", "HargaNow", 60,
             onClick = navigateToName)
         Card(title = "Email", "harganow@example.com",60,
@@ -74,7 +74,7 @@ fun ManageAccountScreen(
 @Composable
 fun ManageAccountScreenPreview() {
     ManageAccountScreen(
-        navigateToHome = { /* TODO */ },
+        navigateToPreviousStack = { /* TODO */ },
         navigateToName = { /* TODO */ },
         navigateToEmail = { /* TODO */ },
         navigateToVerifyPassword = { /* TODO */ },

@@ -7,21 +7,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.harganow.data.auth.Result
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.harganow.R
+import com.example.harganow.presentation.login.AuthViewModel
 
 @Composable
 fun LoginScreen(
-    navigateToHome: () -> Unit,
+    navigateToPreviousStack: () -> Unit,
     navigateToRegister: () -> Unit,
+    navigateToMain: () -> Unit
 ) {
-//    val authViewModel: AuthViewModel = viewModel()
+    val authViewModel: AuthViewModel = viewModel()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-//    val loginResult = authViewModel.loginResult
+    val loginResult = authViewModel.loginResult
     val context = LocalContext.current
 
     Column(
@@ -32,7 +35,7 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                navigateToHome()
+                navigateToPreviousStack()
             },
             modifier = Modifier
                 .padding(vertical = 8.dp),
@@ -49,6 +52,7 @@ fun LoginScreen(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 16.dp)
+                .size(300.dp)
         )
 
         OutlinedTextField(
@@ -91,18 +95,18 @@ fun LoginScreen(
                     return@Button
                 }
 
-//                authViewModel.login(email, password)
-//                authViewModel.loginResult?.let {
-//                    if (it is Result.Success) {
-//                        Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
-//                            .show()
-//                        navigateToHome()
-//                    } else {
-////                      TODO: Check whether account is register
-//                        Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
-//                            .show()
-//                    }
-//                }
+                authViewModel.login(email, password)
+                authViewModel.loginResult?.let {
+                    if (it is Result.Success) {
+                        Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
+                            .show()
+                        navigateToMain()
+                    } else {
+//                      TODO: Check whether account is register
+                        Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -139,11 +143,3 @@ fun LoginScreen(
     }
 }
 
-@Preview
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(
-        navigateToHome = { /* TODO */ },
-        navigateToRegister = { /* TODO */ }
-    )
-}

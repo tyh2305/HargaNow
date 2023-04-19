@@ -30,7 +30,7 @@ fun Paragraph(text: String)
 
 @Composable
 fun PolicyScreen(
-    navigateToAnnouncement: () -> Unit,
+    navigateToPreviousStack: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -38,7 +38,7 @@ fun PolicyScreen(
             .background(Color.White)
 
     ) {
-        Header(title = "Policy", titleSize = 64, navigateToHome = navigateToAnnouncement)
+        Header(title = "Policy", titleSize = 64, navigateToPreviousStack = navigateToPreviousStack)
 
         Column(modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -132,6 +132,6 @@ fun PolicyScreen(
 @Composable
 fun PolicyScreenPreview() {
     PolicyScreen(
-        navigateToAnnouncement = {  }
+        navigateToPreviousStack = {  },
     )
 }

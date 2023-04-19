@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.harganow.R
@@ -19,8 +18,7 @@ import com.example.harganow.ui.theme.Orange
 
 @Composable
 fun ForgetPasswordScreen(
-    navigateToHome: () -> Unit,
-    navigateToForgetPassword: () -> Unit,
+    navigateToPreviousStack: () -> Unit,
 ) {
     var email by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -31,7 +29,7 @@ fun ForgetPasswordScreen(
             .background(Color.White)
     ) {
 
-        Header(title = "Forget Password", titleSize = 64, navigateToHome = navigateToHome)
+        Header(title = "Forget Password", titleSize = 64, navigateToPreviousStack = navigateToPreviousStack)
         Column(
             modifier = Modifier
                 .padding(32.dp)
@@ -98,7 +96,6 @@ fun ForgetPasswordScreen(
 @Composable
 fun ForgetPasswordScreenPreview() {
     ForgetPasswordScreen(
-        navigateToHome = {},
-        navigateToForgetPassword = {},
+        navigateToPreviousStack = {},
     )
 }

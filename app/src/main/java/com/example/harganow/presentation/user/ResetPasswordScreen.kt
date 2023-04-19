@@ -16,7 +16,7 @@ import com.example.harganow.ui.theme.Orange
 
 @Composable
 fun ResetPasswordScreen(
-    navigateToHome: () -> Unit,
+    navigateToPreviousStack: () -> Unit,
     navigateToForgetPassword: () -> Unit,
 ) {
     var newPassword by remember { mutableStateOf("") }
@@ -29,7 +29,7 @@ fun ResetPasswordScreen(
             .background(Color.White)
     ) {
 
-        Header(title = "Reset Password", titleSize = 64, navigateToHome = navigateToHome)
+        Header(title = "Reset Password", titleSize = 64, navigateToPreviousStack = navigateToPreviousStack)
         Column(
             modifier = Modifier
                 .padding(32.dp)
@@ -102,7 +102,7 @@ fun ResetPasswordScreen(
 @Composable
 fun ResetPasswordScreenPreview() {
     ResetPasswordScreen(
-        navigateToHome = {},
+        navigateToPreviousStack = {},
         navigateToForgetPassword = {},
     )
 }

@@ -9,24 +9,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.harganow.R
-import com.example.harganow.data.auth.FireAuthRepository
-import com.example.harganow.presentation.login.AuthViewModel
 import com.example.harganow.data.auth.Result
+import com.example.harganow.presentation.login.AuthViewModel
 
 @Composable
 fun RegisterScreen(
-    navigateToHome: () -> Unit
+    navigateToPreviousStack: () -> Unit,
+    navigateToLogin: () -> Unit,
 ) {
-//    val authViewModel: AuthViewModel = viewModel()
+    val authViewModel: AuthViewModel = viewModel()
 
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-//    val loginResult = authViewModel.loginResult
+    val loginResult = authViewModel.loginResult
     val context = LocalContext.current
 
     fun handleCallback(result: Result<Unit>): Unit {}
@@ -38,7 +37,7 @@ fun RegisterScreen(
     ) {
         Button(
             onClick = {
-                navigateToHome()
+                navigateToPreviousStack()
             },
             modifier = Modifier
                 .padding(vertical = 8.dp),
@@ -55,6 +54,7 @@ fun RegisterScreen(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 16.dp)
+                .size(250.dp)
         )
 
         OutlinedTextField(
@@ -99,21 +99,21 @@ fun RegisterScreen(
                     return@Button
                 }
 
-//                authViewModel.register(email, password) { result ->
-//                    when (result) {
-//                        is Result.Success -> {
-//                            // Handle successful registration
-//                            Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
-//                                .show()
-//                        }
-//
-//                        is Result.Failure -> {
-//                            // Handle registration error
-//                            Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
-//                                .show()
-//                        }
-//                    }
-//                }
+                authViewModel.register(email, password) { result ->
+                    when (result) {
+                        is Result.Success -> {
+                            // Handle successful registration
+                            Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        is Result.Failure -> {
+                            // Handle registration error
+                            Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -140,21 +140,20 @@ fun RegisterScreen(
 
         OutlinedButton(
             onClick = {
-                // TODO : Navigate to login in screen
+                navigateToLogin()
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Log In")
         }
     }
-
-
 }
 @Preview
 @Composable
 fun RegisterScreenPreview() {
     RegisterScreen(
-        navigateToHome = { /* TODO */ }
+        navigateToPreviousStack = { /* TODO */ },
+        navigateToLogin = { /* TODO */ }
     )
 }
 

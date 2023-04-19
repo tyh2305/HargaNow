@@ -1,7 +1,5 @@
 package com.example.harganow.presentation.announcement
 
-import android.widget.Space
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,14 +7,10 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import com.example.harganow.R
 import com.example.harganow.presentation.user.Header
@@ -71,7 +65,7 @@ fun AnnouncementCard(title:String, detail:String, onClick: () -> Unit)
 
 @Composable
 fun AnnouncementScreen(
-    navigateToAnnouncement: () -> Unit,
+    navigateToPreviousStack: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -79,7 +73,7 @@ fun AnnouncementScreen(
             .background(Color.White)
     ) {
 
-        Header(title = "Reset Password", titleSize = 64, navigateToHome = navigateToAnnouncement)
+        Header(title = "Reset Password", titleSize = 64, navigateToPreviousStack = navigateToPreviousStack)
 
         // TODO: Take data from database and create annoucement card for each data
         AnnouncementCard(
@@ -106,6 +100,6 @@ fun AnnouncementScreen(
 @Composable
 fun AnnouncementScreenPreview() {
     AnnouncementScreen(
-        navigateToAnnouncement = {  }
+        navigateToPreviousStack = {  }
     )
 }

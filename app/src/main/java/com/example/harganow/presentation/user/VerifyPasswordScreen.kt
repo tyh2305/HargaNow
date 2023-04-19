@@ -15,7 +15,7 @@ import com.example.harganow.ui.theme.Orange
 
 @Composable
 fun VerifyPasswordScreen(
-    navigateToHome: () -> Unit,
+    navigateToPreviousStack: () -> Unit,
     navigateToResetPassword: () -> Unit,
 ) {
     var currentPassword by remember { mutableStateOf("") }
@@ -27,7 +27,7 @@ fun VerifyPasswordScreen(
             .background(Color.White)
     ) {
 
-        Header(title = "Verify Password", titleSize = 64, navigateToHome = navigateToHome)
+        Header(title = "Verify Password", titleSize = 64, navigateToPreviousStack = navigateToPreviousStack)
         Column(
             modifier = Modifier
                 .padding(32.dp)
@@ -86,7 +86,7 @@ fun VerifyPasswordScreen(
 @Composable
 fun VerifyPasswordScreenPreview() {
     VerifyPasswordScreen(
-        navigateToHome = {},
+        navigateToPreviousStack = {},
         navigateToResetPassword = {},
     )
 }
