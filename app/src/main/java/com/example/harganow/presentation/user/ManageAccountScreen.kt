@@ -5,14 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.harganow.R
 import com.example.harganow.ui.theme.Orange
 
 @Composable
@@ -54,8 +52,8 @@ fun ManageAccountScreen(
     navigateToHome: () -> Unit,
     navigateToName: () -> Unit,
     navigateToEmail: () -> Unit,
-    navigateToPassword: () -> Unit,
-    ) {
+    navigateToVerifyPassword: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +66,7 @@ fun ManageAccountScreen(
         Card(title = "Email", "harganow@example.com",60,
             onClick = navigateToEmail)
         Card(title = "Change Password", "",60,
-            onClick = navigateToPassword)
+            onClick = navigateToVerifyPassword)
     }
 }
 
@@ -79,6 +77,6 @@ fun ManageAccountScreenPreview() {
         navigateToHome = { /* TODO */ },
         navigateToName = { /* TODO */ },
         navigateToEmail = { /* TODO */ },
-        navigateToPassword = { /* TODO */ },
+        navigateToVerifyPassword = { /* TODO */ },
     )
 }
