@@ -11,8 +11,8 @@ class Firestore {
         fun getDocument(collection: String, document: String) =
             db.collection(collection).document(document)
 
-        fun DocRef(collectionName: String, id: Int) =
-            Firestore.getCollection(collectionName).document(id.toString())
+        fun DocRef(collectionName: String, id: String) =
+            Firestore.getCollection(collectionName).document(id)
 
         fun ColRef(collectionName: String) = Firestore.getCollection(collectionName)
 

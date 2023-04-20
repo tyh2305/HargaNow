@@ -87,7 +87,7 @@ class ItemRepository {
 //        return result
     }
 
-    suspend fun getItemWithId(id: Int): DataOrException<Item, Exception> {
+    suspend fun getItemWithId(id: String): DataOrException<Item, Exception> {
         val dataOrException = DataOrException<Item, Exception>()
         try {
             Log.d(TAG, "Item ${id} is found")

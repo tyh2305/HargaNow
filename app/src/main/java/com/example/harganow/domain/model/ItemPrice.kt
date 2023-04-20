@@ -1,5 +1,32 @@
 package com.example.harganow.domain.model
 
+import ItemRepository
+import com.example.harganow.data.repository.PremiseRepository
+import com.google.firebase.firestore.DocumentId
+
+data class ItemPriceData(
+    @DocumentId
+    var id: String?,
+    var item_code: String?,
+    var premise_code: String?,
+    var price: Double,
+    var date: String?,
+) {
+    constructor() : this(null, null, null, 0.0, null)
+
+    suspend fun toItemPrice(
+        itemRepository: ItemRepository,
+        premiseRepository: PremiseRepository
+    ): ItemPrice {
+//        Get item with code
+        var item = itemRepository.getItemWithId(item_code!!)
+//        Get premise with code
+        var premise = premiseRepository.getPremiseWithId(premise_code!!)
+        return ItemPrice(item.data!!, premise.data!!, price, ItemDate.fromString(date!!)!!)
+    }
+}
+
+
 data class ItemPrice(
     var item: Item,
     var premise: Premise,

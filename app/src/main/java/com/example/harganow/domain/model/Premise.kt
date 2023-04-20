@@ -1,5 +1,7 @@
 package com.example.harganow.domain.model
 
+import com.google.firebase.firestore.DocumentId
+
 enum class Place {
     PASAR_BASAH,
     PASAR_RAYA,
@@ -63,9 +65,10 @@ fun stateToString(state: State): String {
 }
 
 data class Premise(
+    @DocumentId
     val id: String,
-    val name: String,
-    val type: String,
+    val premise: String,
+    val premise_type: String,
     val state: String,
     val district: String,
 ) {
