@@ -1,10 +1,7 @@
 package com.example.harganow.data.repository
 
-import android.util.Log
-import com.example.harganow.data.auth.AuthRepository
 import com.example.harganow.data.auth.FireAuthRepository
 import com.example.harganow.data.source.Firestore
-import com.example.harganow.domain.model.Item
 import com.google.firebase.firestore.DocumentReference
 
 class UserRepository {
