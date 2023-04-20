@@ -9,14 +9,20 @@ class AuthViewModel : ViewModel() {
 
     var loginResult: Result<Unit>? = null
 
-    fun login(email: String, password: String) {
+    suspend fun login(email: String, password: String) {
         authRepository.login(email, password) { result ->
             loginResult = result
         }
     }
 
-    fun register(email: String, password: String, onResult: (Result<Unit>) -> Unit) {
+    suspend fun register(email: String, password: String, onResult: (Result<Unit>) -> Unit) {
         authRepository.register(email, password) { result ->
+            onResult(result)
+        }
+    }
+
+    suspend fun sendResetPassword(onResult: (Result<Unit>) -> Unit) {
+        authRepository.resetPassword() { result ->
             onResult(result)
         }
     }
