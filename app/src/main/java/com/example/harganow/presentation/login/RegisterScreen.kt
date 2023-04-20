@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.harganow.R
 import com.example.harganow.data.auth.Result
 import com.example.harganow.presentation.login.AuthViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
@@ -27,8 +28,29 @@ fun RegisterScreen(
 
     val loginResult = authViewModel.loginResult
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     fun handleCallback(result: Result<Unit>): Unit {}
+
+    fun CallRegister() {
+        coroutineScope.launch {
+            authViewModel.register(email, password) { result ->
+                when (result) {
+                    is Result.Success -> {
+                        // Handle successful registration
+                        Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    is Result.Failure -> {
+                        // Handle registration error
+                        Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -98,22 +120,7 @@ fun RegisterScreen(
                         .show()
                     return@Button
                 }
-
-                authViewModel.register(email, password) { result ->
-                    when (result) {
-                        is Result.Success -> {
-                            // Handle successful registration
-                            Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-
-                        is Result.Failure -> {
-                            // Handle registration error
-                            Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
-                }
+                CallRegister()
             },
             modifier = Modifier.fillMaxWidth()
         ) {

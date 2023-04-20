@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.harganow.R
 import com.example.harganow.presentation.login.AuthViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -26,13 +27,29 @@ fun LoginScreen(
 
     val loginResult = authViewModel.loginResult
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    fun CallLogin() {
+        coroutineScope.launch {
+            authViewModel.login(email, password)
+            authViewModel.loginResult?.let {
+                if (it is Result.Success) {
+                    Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
+                        .show()
+                    navigateToMain()
+                } else {
+                    Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         Button(
             onClick = {
                 navigateToPreviousStack()
@@ -44,15 +61,13 @@ fun LoginScreen(
                 text = "<",
             )
         }
-
-        // TODO: Change the size of the image
         Image(
             painter = painterResource(id = R.drawable.login_image),
             contentDescription = "Login Image",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = 16.dp)
-                .size(300.dp)
+                .size(250.dp)
         )
 
         OutlinedTextField(
@@ -88,25 +103,13 @@ fun LoginScreen(
 
         Button(
             onClick = {
-                // TODO : Validate field is not empty
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT)
                         .show()
                     return@Button
                 }
 
-                authViewModel.login(email, password)
-                authViewModel.loginResult?.let {
-                    if (it is Result.Success) {
-                        Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
-                            .show()
-                        navigateToMain()
-                    } else {
-//                      TODO: Check whether account is register
-                        Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
+                CallLogin()
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -133,7 +136,6 @@ fun LoginScreen(
 
         OutlinedButton(
             onClick = {
-                // TODO : Navigate to sign up screen
                 navigateToRegister()
             },
             modifier = Modifier.fillMaxWidth()
@@ -142,4 +144,5 @@ fun LoginScreen(
         }
     }
 }
+
 
