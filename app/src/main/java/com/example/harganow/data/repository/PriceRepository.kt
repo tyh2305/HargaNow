@@ -1,5 +1,6 @@
 package com.example.harganow.data.repository
 
+import android.provider.ContactsContract.Data
 import android.util.Log
 import com.example.harganow.data.source.Firestore
 import com.example.harganow.domain.model.DataOrException
@@ -79,5 +80,28 @@ class PriceRepository {
             dataOrException.exception = e
         }
         return dataOrException
+    }
+
+    suspend fun getTotalPrice(
+        premiseId: String,
+        items: List<Map<Int, Int>>
+    ): DataOrException<Double, Exception> {
+        val dataOrException = DataOrException<Double, Exception>()
+        var totalPrice = 0.0
+        try {
+            for (item in items) {
+                val itemPrice = getPriceWithPremiseAndItem(premiseId, item.keys.first().toString())
+                if (itemPrice.data == null) {
+                    throw Exception(itemPrice.exception)
+                }
+                totalPrice += (itemPrice.data as ItemPriceData).price * item.values.first()
+            }
+            dataOrException.data = totalPrice
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, "Error getting documents: ", e)
+            dataOrException.exception = e
+        }
+        return dataOrException
+
     }
 }
