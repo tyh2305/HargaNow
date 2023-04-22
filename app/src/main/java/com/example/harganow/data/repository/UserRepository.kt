@@ -1,8 +1,13 @@
 package com.example.harganow.data.repository
 
+import android.util.Log
 import com.example.harganow.data.auth.FireAuthRepository
 import com.example.harganow.data.source.Firestore
+import com.example.harganow.data.source.Firestore.Companion.db
+import com.example.harganow.domain.model.AppUser
 import com.google.firebase.firestore.DocumentReference
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.tasks.await
 
 class UserRepository {
     val TAG = "UserRepository"
@@ -14,6 +19,14 @@ class UserRepository {
             return Firestore.getDocument("user", currentUser.uid)
         else
             return null
+    }
+
+    fun createNewUser(user: AppUser) {
+        db.collection("user").document(user.id).set(user).addOnSuccessListener {
+            Log.d(TAG, "User created")
+        }.addOnFailureListener { exception ->
+            Log.d(TAG, "User not created: $exception")
+        }
     }
 
     fun getUserCartItem(): List<Int>? {
@@ -37,5 +50,6 @@ class UserRepository {
 
         return itemListId
     }
+
 
 }
