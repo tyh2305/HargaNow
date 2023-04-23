@@ -14,7 +14,7 @@ import com.example.harganow.presentation.user.*
 fun MyApp() {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = "home") {
+    NavHost(navController, startDestination = "announcement") {
         composable("home") { HomeScreen(
                 navigateToLogin = { navController.navigate("login") },
                 navigateToRegister = { navController.navigate("register") },
@@ -34,7 +34,7 @@ fun MyApp() {
                 navigateToPreviousStack = { navController.popBackStack() },
                 navigateToManageAccount = { navController.navigate("manage_account") },
                 navigateToAddress = {},
-                navigateToBankAccount = {},
+                navigateToBankAccount = {navController.navigate("bank_accounts_cards")},
                 navigateToPolicy = {navController.navigate("policy") },
                 navigateToHome = {navController.navigate("home") },
             )
@@ -46,14 +46,7 @@ fun MyApp() {
         composable("manage_account") {
             ManageAccountScreen(
                 navigateToPreviousStack = { navController.popBackStack() },
-                navigateToName = { /* navigate to name screen */ },
-                navigateToEmail = { /* navigate to email screen */ },
-                navigateToVerifyPassword = { navController.navigate("verify_password") }
-        ) }
-        composable("verify_password") {
-            VerifyPasswordScreen(
-                navigateToPreviousStack = { navController.popBackStack() },
-                navigateToResetPassword = { navController.navigate("reset_password")  }
+                navigateToForgetPassword = { navController.navigate("forget_password") }
         ) }
         composable("reset_password") {
             ResetPasswordScreen(
@@ -67,6 +60,12 @@ fun MyApp() {
         composable("announcement"){
             AnnouncementScreen(
                 navigateToPreviousStack = { navController.popBackStack() },
+        ) }
+        composable("bank_accounts_cards"){
+            BankAccountsCardsScreen(
+                navigateToPreviousStack = { navController.popBackStack() },
+                navigateToAddBankAccount = { },
+                navigateToAddCard = { },
         ) }
     }
 }

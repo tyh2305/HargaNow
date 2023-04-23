@@ -3,8 +3,12 @@ package com.example.harganow.presentation.user
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.TextButton
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -51,10 +55,11 @@ fun Card(title:String, info:String, cardHeight: Int, onClick: () -> Unit)
 @Composable
 fun ManageAccountScreen(
     navigateToPreviousStack: () -> Unit,
-    navigateToName: () -> Unit,
-    navigateToEmail: () -> Unit,
-    navigateToVerifyPassword: () -> Unit,
+    navigateToForgetPassword: () -> Unit,
 ) {
+    var nameDialogOpen by remember { mutableStateOf(false)}
+    var textFieldValue by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,12 +67,53 @@ fun ManageAccountScreen(
     ) {
 
         Header(title = "Manage Account", titleSize = 64, navigateToPreviousStack = navigateToPreviousStack)
+        // TODO: Pass name to info
         Card(title = "Name", "HargaNow", 60,
-            onClick = navigateToName)
-        Card(title = "Email", "harganow@example.com",60,
-            onClick = navigateToEmail)
+            onClick = { nameDialogOpen = true })
         Card(title = "Change Password", "",60,
-            onClick = navigateToVerifyPassword)
+            onClick = navigateToForgetPassword)
+        if (nameDialogOpen) {
+            AlertDialog(
+                onDismissRequest = {
+                    nameDialogOpen = false
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            nameDialogOpen = false
+                            // TODO: Change name in the database
+                        }
+                    ) {
+                        Text(text = "Confirm")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            // close the dialog
+                            nameDialogOpen = false
+                        }
+                    ) {
+                        Text(text = "Dismiss")
+                    }
+                },
+                title = {
+                    Text(text = "Change Name")
+                },
+                text = {
+                    OutlinedTextField(
+                        value = textFieldValue,
+                        onValueChange = { textFieldValue = it },
+                        label = { Text("Name") }
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(32.dp),
+                shape = RoundedCornerShape(5.dp),
+                backgroundColor = Color.White
+            )
+        }
     }
 }
 
@@ -76,8 +122,6 @@ fun ManageAccountScreen(
 fun ManageAccountScreenPreview() {
     ManageAccountScreen(
         navigateToPreviousStack = { /* TODO */ },
-        navigateToName = { /* TODO */ },
-        navigateToEmail = { /* TODO */ },
-        navigateToVerifyPassword = { /* TODO */ },
+        navigateToForgetPassword = { /* TODO */ },
     )
 }

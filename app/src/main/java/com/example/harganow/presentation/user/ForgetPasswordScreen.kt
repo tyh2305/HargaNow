@@ -47,19 +47,8 @@ fun ForgetPasswordScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = email,
-                onValueChange = {email = it},
-                placeholder = { Text("Your Email") },
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
             Text(
-                text = "An verification email will be sent to you.",
+                text = "An verification email will be sent to your email.",
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
             )

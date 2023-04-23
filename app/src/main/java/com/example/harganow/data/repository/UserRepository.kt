@@ -6,8 +6,6 @@ import com.example.harganow.data.source.Firestore
 import com.example.harganow.data.source.Firestore.Companion.db
 import com.example.harganow.domain.model.AppUser
 import com.google.firebase.firestore.DocumentReference
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.tasks.await
 
 class UserRepository {
     val TAG = "UserRepository"

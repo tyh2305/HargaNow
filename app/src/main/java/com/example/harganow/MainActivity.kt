@@ -40,7 +40,6 @@ class MainActivity : ComponentActivity() {
 fun TestLayout() {
     var name = "Android"
 
-
     fun onValueChange(value: String): Unit {
         name = value
     }
