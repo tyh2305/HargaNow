@@ -2,8 +2,6 @@ package com.example.harganow.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -12,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.harganow.ui.theme.Orange
+
 
 @Preview(
     showBackground = true,
@@ -38,20 +36,7 @@ fun Header(title: String, titleSize: Int, navigateToPreviousStack: () -> Unit) {
                 )
             } ,
             navigationIcon = {
-                Button(
-                    onClick = {
-                        navigateToPreviousStack()
-                    },
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .size(40.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Orange)
-                ) {
-                    Text(
-                        text = "<",
-                        color = Color.White,
-                    )
-                }
+                BackButton(navigateToPreviousStack = navigateToPreviousStack)
             },
         )
         Box(modifier = Modifier
