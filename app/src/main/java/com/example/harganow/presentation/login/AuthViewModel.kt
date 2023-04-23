@@ -2,10 +2,13 @@ package com.example.harganow.presentation.login
 
 import androidx.lifecycle.ViewModel
 import com.example.harganow.data.auth.FireAuthRepository
+import com.example.harganow.data.repository.UserRepository
+import com.example.harganow.domain.model.AppUser
 import com.example.harganow.data.auth.Result as Result
 
 class AuthViewModel : ViewModel() {
     private val authRepository: FireAuthRepository = FireAuthRepository()
+    private val userRepository: UserRepository = UserRepository()
 
     var loginResult: Result<Unit>? = null
 
@@ -15,9 +18,23 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    suspend fun register(email: String, password: String, onResult: (Result<Unit>) -> Unit) {
+    suspend fun register(
+        email: String,
+        name: String?,
+        password: String,
+        onResult: (Result<Any>) -> Unit
+    ) {
         authRepository.register(email, password) { result ->
             onResult(result)
+            if (result is Result.Success) {
+                userRepository.createNewUser(
+                    AppUser(
+                        id = result.data.toString(),
+                        name = name,
+                        email = email
+                    )
+                )
+            }
         }
     }
 

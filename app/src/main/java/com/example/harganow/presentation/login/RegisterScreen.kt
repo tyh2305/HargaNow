@@ -34,7 +34,11 @@ fun RegisterScreen(
 
     fun CallRegister() {
         coroutineScope.launch {
-            authViewModel.register(email, password) { result ->
+            authViewModel.register(
+                email = email,
+                name = username,
+                password = password
+            ) { result ->
                 when (result) {
                     is Result.Success -> {
                         // Handle successful registration
@@ -83,7 +87,12 @@ fun RegisterScreen(
             value = username,
             onValueChange = { username = it },
             label = { Text("Name") },
-            leadingIcon = { Icon(painterResource(id = R.drawable.person_black_24dp), contentDescription = "Email") },
+            leadingIcon = {
+                Icon(
+                    painterResource(id = R.drawable.person_black_24dp),
+                    contentDescription = "Email"
+                )
+            },
             placeholder = { Text("Your Name") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -94,7 +103,12 @@ fun RegisterScreen(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
-            leadingIcon = { Icon(painterResource(id = R.drawable.email_black_24dp), contentDescription = "Email") },
+            leadingIcon = {
+                Icon(
+                    painterResource(id = R.drawable.email_black_24dp),
+                    contentDescription = "Email"
+                )
+            },
             placeholder = { Text("harganow@example.com") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -105,7 +119,12 @@ fun RegisterScreen(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
-            leadingIcon = { Icon(painterResource(id = R.drawable.lock_black_24dp), contentDescription = "Password") },
+            leadingIcon = {
+                Icon(
+                    painterResource(id = R.drawable.lock_black_24dp),
+                    contentDescription = "Password"
+                )
+            },
             placeholder = { Text("Your Password") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -155,6 +174,7 @@ fun RegisterScreen(
         }
     }
 }
+
 @Preview
 @Composable
 fun RegisterScreenPreview() {

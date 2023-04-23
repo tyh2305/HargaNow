@@ -41,10 +41,13 @@ class FireAuthRepository {
 //            }
     }
 
-    suspend fun register(email: String, password: String, callback: (Result<Unit>) -> Unit) {
+    suspend fun register(email: String, password: String, callback: (Result<Any>) -> Unit) {
         return try {
-            auth.createUserWithEmailAndPassword(email, password).await()
-            callback(Result.Success(Unit))
+            val user = auth.createUserWithEmailAndPassword(email, password).await()
+            if (user.user == null) {
+                callback(Result.Failure(Exception("Unknown error occurred during registration")))
+            }
+            callback(Result.Success(user.user!!.uid))
         } catch (e: Exception) {
             if (e is FirebaseAuthException) {
                 callback(Result.Failure(e))
