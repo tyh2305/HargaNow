@@ -41,6 +41,18 @@ class UserRepository {
         }
     }
 
+    fun changeUserName(name: String) {
+        // TODO: Implement change name on auth and database
+//        if (UserRef() == null) {
+//            return
+//        }
+//        UserRef()!!.update("name", name).addOnSuccessListener {
+//            Log.d(TAG, "User name updated")
+//        }.addOnFailureListener { exception ->
+//            Log.d(TAG, "User name not updated: $exception")
+//        }
+    }
+
     fun getUserCartItem(): List<Int>? {
         // Get current user id
 //        if (UserRef() == null) {
