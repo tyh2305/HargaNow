@@ -9,4 +9,3 @@ val Teal200 = Color(0xFF03DAC5)
 val Orange = Color(0XFFFF9500)
 
 
-val black = Color(0xff000000)
