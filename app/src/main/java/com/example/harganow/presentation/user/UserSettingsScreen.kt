@@ -1,20 +1,27 @@
 package com.example.harganow.presentation.user
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.harganow.R
+import com.example.harganow.data.auth.Result
 import com.example.harganow.presentation.components.Header
+import com.example.harganow.presentation.login.AuthViewModel
 import com.example.harganow.ui.theme.Orange
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsCard(title: String, cardHeight:Int, iconID:Int, onClick: () -> Unit) {
@@ -55,6 +62,32 @@ fun UserSettingsScreen(
     navigateToPolicy: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
+    val authViewModel: AuthViewModel = viewModel()
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    fun CallLogout()
+    {
+        coroutineScope.launch {
+            authViewModel.logout(){ result ->
+                when (result) {
+                    is Result.Success -> {
+                        // Handle successful registration
+                        Toast.makeText(context, "Logout Success", Toast.LENGTH_SHORT)
+                            .show()
+                        navigateToHome()
+                    }
+
+                    is Result.Failure -> {
+                        // Handle registration error
+                        Toast.makeText(context, "Logout Failed", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -71,7 +104,7 @@ fun UserSettingsScreen(
         SettingsCard(title = "Policy", 60,
             R.drawable.policy_black_24dp, onClick = navigateToPolicy)
         SettingsCard(title = "Logout", 60,
-            R.drawable.logout_black_24dp, onClick = navigateToHome)
+            R.drawable.logout_black_24dp, onClick = {CallLogout()})
     }
 }
 

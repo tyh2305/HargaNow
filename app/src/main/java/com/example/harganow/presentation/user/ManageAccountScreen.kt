@@ -1,5 +1,6 @@
 package com.example.harganow.presentation.user
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,10 +12,12 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.harganow.data.repository.UserRepository
 import com.example.harganow.presentation.components.Header
 import com.example.harganow.ui.theme.Orange
 
@@ -58,7 +61,9 @@ fun ManageAccountScreen(
     navigateToForgetPassword: () -> Unit,
 ) {
     var nameDialogOpen by remember { mutableStateOf(false)}
-    var textFieldValue by remember { mutableStateOf("") }
+    var nameFieldValue by remember { mutableStateOf("") }
+    val userRepository: UserRepository = UserRepository()
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -82,6 +87,20 @@ fun ManageAccountScreen(
                         onClick = {
                             nameDialogOpen = false
                             // TODO: Change name in the database
+                            if(nameFieldValue.isEmpty())
+                            {
+                                Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT)
+                                    .show()
+                                return@TextButton
+                            }
+
+                            else
+                            {
+                                Toast.makeText(context, "Username changed successfully", Toast.LENGTH_SHORT)
+                                    .show()
+                                userRepository.changeUserName(nameFieldValue)
+                            }
+
                         }
                     ) {
                         Text(text = "Confirm")
@@ -102,8 +121,8 @@ fun ManageAccountScreen(
                 },
                 text = {
                     OutlinedTextField(
-                        value = textFieldValue,
-                        onValueChange = { textFieldValue = it },
+                        value = nameFieldValue,
+                        onValueChange = { nameFieldValue = it },
                         label = { Text("Name") }
                     )
                 },
