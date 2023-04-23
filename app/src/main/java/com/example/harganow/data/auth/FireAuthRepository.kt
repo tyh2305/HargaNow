@@ -72,11 +72,7 @@ class FireAuthRepository {
         callback(Result.Success(Unit))
     }
 
-    suspend fun resetPassword(callback: (Result<Unit>) -> Unit) {
-        var email = currentUser?.email ?: ""
-        if (email.isEmpty()) {
-            callback(Result.Failure(Exception("Current user is not logged in")))
-        }
+    suspend fun resetPassword(email: String, callback: (Result<Unit>) -> Unit) {
         return try {
             auth.sendPasswordResetEmail(email).await()
             callback(Result.Success(Unit))
