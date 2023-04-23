@@ -34,7 +34,7 @@ fun ForgetPasswordScreen(
     fun CallSendResetPassword()
     {
         coroutineScope.launch{
-            authViewModel.sendResetPassword()
+            authViewModel.sendResetPassword(email)
             { result ->
                 when (result) {
                     is Result.Success -> {
@@ -76,6 +76,17 @@ fun ForgetPasswordScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            OutlinedTextField(
+                value = email,
+                onValueChange = {email = it},
+                placeholder = { Text("Your Email") },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
                 text = "An verification email will be sent to your email.",
                 modifier = Modifier
@@ -97,7 +108,12 @@ fun ForgetPasswordScreen(
                         return@Button
                     }
                     // TODO: Sent email to user
-                    CallSendResetPassword()
+                    else
+                    {
+                        Toast.makeText(context, "Email sent", Toast.LENGTH_SHORT)
+                            .show()
+                        CallSendResetPassword()
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth(),

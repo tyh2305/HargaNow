@@ -38,8 +38,8 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    suspend fun sendResetPassword(onResult: (Result<Unit>) -> Unit) {
-        authRepository.resetPassword() { result ->
+    suspend fun sendResetPassword(email: String, onResult: (Result<Unit>) -> Unit) {
+        authRepository.resetPassword(email) { result ->
             onResult(result)
         }
     }
