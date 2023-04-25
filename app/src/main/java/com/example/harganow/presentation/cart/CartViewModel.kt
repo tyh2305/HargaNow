@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.example.harganow.data.repository.CartRepository
 import com.example.harganow.data.repository.UserRepository
 import com.example.harganow.domain.model.DataOrException
 import com.example.harganow.domain.model.Item
@@ -25,17 +26,16 @@ import kotlinx.coroutines.launch
 class CartViewModel : ViewModel() {
     private val itemRepository: ItemRepository = ItemRepository()
     private val userRepository: UserRepository = UserRepository()
-    val cartItemIdList: List<Int>? = userRepository.getUserCartItem()
-    val cartItemList: ArrayList<Item> = ArrayList<Item>()
-    val cartItemPriceList: ArrayList<ItemPrice> = ArrayList<ItemPrice>()
+    private val cartRepository: CartRepository = CartRepository()
+
+    //    val cartItemIdList: List<Int>? = userRepository.getUserCartItem()
+//    val cartItemList: ArrayList<Item> = ArrayList<Item>()
+//    val cartItemPriceList: ArrayList<ItemPrice> = ArrayList<ItemPrice>()
     val TAG = "CartViewModel"
 
     var loading = mutableStateOf(false)
-    val data: MutableState<DataOrException<List<ItemPrice>, Exception>> = mutableStateOf(
-        DataOrException(
-            listOf<ItemPrice>(), Exception()
-        )
-    )
+    val premiseId: String = "18098"
+    var data: MutableList<Map<ItemPrice, Int>> = mutableListOf()
 
     init {
         getData()
@@ -44,29 +44,21 @@ class CartViewModel : ViewModel() {
     private fun getData() {
         viewModelScope.launch {
             loading.value = true
-            if (cartItemIdList != null) {
-                for (itemId in cartItemIdList) {
-                    Log.d(TAG, "fetchItem: $itemId")
-                    var doe = itemRepository.getItemWithId(itemId.toString())
-                    Log.d(TAG, "fetchItemDone: ${doe.data}")
-                    cartItemList.add(doe.data!!)
-                    Log.d(TAG, "addToList: ${cartItemList.size}")
-                }
-            }
-            fetchItemPrice()
+//            if (cartItemIdList != null) {
+//                for (itemId in cartItemIdList) {
+//                    Log.d(TAG, "fetchItem: $itemId")
+//                    var doe = itemRepository.getItemWithId(itemId.toString())
+//                    Log.d(TAG, "fetchItemDone: ${doe.data}")
+//                    cartItemList.add(doe.data!!)
+//                    Log.d(TAG, "addToList: ${cartItemList.size}")
+//                }
+//            }
+//            fetchItemPrice()
+            data = cartRepository.getCartData(premiseId)
             loading.value = false
         }
     }
 
-    suspend fun fetchItem() {
-        if (cartItemIdList != null) {
-            for (itemId in cartItemIdList) {
-                Log.d(TAG, "fetchItem: $itemId")
-//                cartItemList.add(itemRepository.getItemWithId(itemId))
-                Log.d(TAG, "fetchItemDone: ${cartItemList.size}")
-            }
-        }
-    }
 
     fun fetchItemPrice() {
         val date: ItemDate = ItemDate(18, 4, 2023)

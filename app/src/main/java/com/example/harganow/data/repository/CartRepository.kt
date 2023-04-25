@@ -1,12 +1,17 @@
 package com.example.harganow.data.repository
 
+import ItemRepository
 import android.util.Log
 import com.example.harganow.data.auth.FireAuthRepository
 import com.example.harganow.data.source.Firestore
 import com.example.harganow.data.source.Firestore.Companion.ColRef
 import com.example.harganow.data.source.Firestore.Companion.DocRef
 import com.example.harganow.domain.model.Cart
+import com.example.harganow.domain.model.CartItem
 import com.example.harganow.domain.model.DataOrException
+import com.example.harganow.domain.model.Item
+import com.example.harganow.domain.model.ItemPrice
+import com.example.harganow.domain.model.ItemPriceData
 import kotlinx.coroutines.tasks.await
 
 class CartRepository {
@@ -31,7 +36,7 @@ class CartRepository {
         return doe
     }
 
-    suspend fun addToCart(premiseId: String, item: Map<Int, Int>) {
+    suspend fun addToCart(premiseId: String, item: CartItem) {
         if (currentUser?.uid == null) {
             throw Exception("User not logged in")
         }
@@ -44,7 +49,7 @@ class CartRepository {
         updateCart(premiseId, newItems!!)
     }
 
-    suspend fun updateCart(premiseId: String, items: List<Map<Int, Int>>) {
+    suspend fun updateCart(premiseId: String, items: List<CartItem>) {
         if (currentUser?.uid == null) {
             throw Exception("User not logged in")
         }
@@ -65,7 +70,10 @@ class CartRepository {
         if (cart == null) {
             throw Exception("Cart not found")
         }
-        val newItems = cart.data?.items?.filter { item -> !items.contains(item) }
+        val newItems = cart.data!!.items?.filter { item ->
+            !items.any { it.containsKey(item.id) }
+        }
+
         updateCart(premiseId, newItems!!)
     }
 
@@ -77,13 +85,60 @@ class CartRepository {
         if (cart == null) {
             throw Exception("Cart not found")
         }
-        val newItems = cart.data?.items?.map { item ->
-            if (item.containsKey(itemId)) {
-                mapOf(itemId to itemCount)
-            } else {
-                item
+        cart.data?.items?.map { item ->
+            if (item.id == itemId) {
+                item.count = itemCount
             }
         }
-        updateCart(premiseId, newItems!!)
+        updateCart(premiseId, cart.data!!.items!!)
+    }
+
+    suspend fun getCartData(premiseId: String): MutableList<Map<ItemPrice, Int>> {
+        val itemRepository = ItemRepository()
+        val priceRepository = PriceRepository()
+        var cartDoe: DataOrException<Cart, Exception>? = getCart(premiseId)
+        if (cartDoe == null) {
+            throw Exception("Cart not found")
+        }
+
+        val cart = cartDoe.data
+        if (cart == null) {
+            throw Exception("Cart not found")
+        }
+
+        val items = cart.items
+        if (items == null) {
+            throw Exception("Cart not found")
+        }
+
+        val itemIds = items.map { item -> item.id }
+        var priceList = mutableListOf<ItemPriceData>()
+        itemIds.map { item ->
+            var temp = priceRepository.getPriceWithPremiseAndItem(
+                itemId = item.toString(),
+                premiseId = premiseId
+            )
+            if (temp.data == null) {
+                throw Exception("Price not found")
+            }
+            priceList.add(temp.data!!.first())
+        }
+
+        var itemPriceList = mutableListOf<Map<ItemPrice, Int>>()
+        priceList.map { priceData ->
+            var itemCount =
+                items.find { item -> item.id!!.toString() == priceData.item_code }?.count
+                    ?: 0
+            itemPriceList.add(
+                mapOf(
+                    priceData.toItemPrice(
+                        itemRepository,
+                        premiseRepository = PremiseRepository()
+                    ) to
+                            itemCount
+                )
+            )
+        }
+        return itemPriceList
     }
 }

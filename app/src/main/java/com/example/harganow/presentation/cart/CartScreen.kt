@@ -1,7 +1,5 @@
-
 package com.example.harganow.presentation.cart
 
-import ItemRepository
 import android.util.Log
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -24,13 +22,10 @@ fun CircularProgressBar(isDisplayed: Boolean) {
 }
 
 @Composable
-fun CartScreen() {
+fun CartScreen(navigateToPreviousStack: () -> Unit, navigateToCheckout: () -> Unit) {
     val TAG = "CartScreen"
     val context = LocalContext.current
     val cartViewModel: CartViewModel = CartViewModel()
-
-    val cartPriceList: List<ItemPrice>? = cartViewModel.cartItemPriceList
-    Log.d(TAG, "CartScreen: $cartPriceList")
 
     Surface(
         color = MaterialTheme.colors.background
@@ -39,6 +34,6 @@ fun CartScreen() {
         CircularProgressBar(
             isDisplayed = cartViewModel.loading.value
         )
-        CartItemListBuilder(itemPriceList = cartPriceList!!)
+        CartItemListBuilder(cartViewModel.data)
     }
 }
