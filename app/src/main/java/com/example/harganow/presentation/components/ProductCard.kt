@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -32,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.harganow.R
 import com.example.harganow.ui.theme.Orange
-import com.example.harganow.ui.theme.black
 
 @Preview (showBackground = false)
 @Composable
@@ -78,7 +78,7 @@ fun ProductCard(
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "",
-                        tint = black,
+                        tint = Color.Black,
                         modifier = Modifier
                             .size(25.dp)
                             .align(Alignment.Center)
