@@ -9,10 +9,10 @@ data class ItemPriceData(
     var id: String?,
     var item_code: String?,
     var premise_code: String?,
-    var price: Double,
+    var price: String?,
     var date: String?,
 ) {
-    constructor() : this(null, null, null, 0.0, null)
+    constructor() : this(null, null, null, null, null)
 
     suspend fun toItemPrice(
         itemRepository: ItemRepository,
@@ -22,7 +22,12 @@ data class ItemPriceData(
         var item = itemRepository.getItemWithId(item_code!!)
 //        Get premise with code
         var premise = premiseRepository.getPremiseWithId(premise_code!!)
-        return ItemPrice(item.data!!, premise.data!!, price, ItemDate.fromString(date!!)!!)
+        return ItemPrice(
+            item.data!!,
+            premise.data!!,
+            price!!.toDouble(),
+            ItemDate.fromString(date!!)!!
+        )
     }
 }
 

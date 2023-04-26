@@ -61,14 +61,18 @@ import javax.net.ssl.X509TrustManager
 @Composable
 fun CartItem(
     _state: Boolean,
-    productId: String,
-    productName: String,
-    price: Double,
-    count: Int,
-    onClick: (() -> Unit)?
+    item: ItemPrice,
+    count: MutableState<Int>,
+    onClick: (() -> Unit)?,
+    selectedItem: MutableList<Map<ItemPrice, Int>>
 ) {
+    var productId = item.item.id.toString()
+    var productName = item.item.item.toString() + "-" + item.item.unit.toString()
+    var price = item.price
     val TAG = "CartItem:$productId"
     var state = remember { mutableStateOf(_state) }
+//    var count = remember { mutableStateOf(_count) }
+    var tempCount: Int = count.value
     fun retrieveImage(): String {
         var imageUrl = ImageGetter.GetImage(productId)
         Log.v(TAG, "ImageUrl : $imageUrl")
@@ -82,6 +86,12 @@ fun CartItem(
 
     fun handleClick(): Unit {
         state.value = !state.value
+        if (state.value) {
+            tempCount = count.value
+            selectedItem.add(mapOf(item to tempCount))
+        } else {
+            selectedItem.remove(mapOf(item to tempCount))
+        }
         onClick?.invoke()
     }
 
@@ -136,28 +146,32 @@ fun CartItem(
                 Text(
                     text = priceToString(price)
                 )
-                CartItemCount(count, null)
+                CartItemCount(count, onCountChange = { _count ->
+                    count.value = _count.value
+                    if (state.value) {
+                        selectedItem.remove(mapOf(item to tempCount))
+                        tempCount = count.value
+                        selectedItem.add(mapOf(item to tempCount))
+                    }
+                })
             }
         }
     }
 }
 
 @Composable
-fun CartItemCount(_count: Int, removeFromList: (() -> Unit)?) {
-    val count = remember { mutableStateOf(_count) }
-
+fun CartItemCount(_count: MutableState<Int>, onCountChange: ((MutableState<Int>) -> Unit)) {
+    var count = remember { mutableStateOf(_count.value) }
     fun handleMinus() {
         if (count.value > 0) {
             count.value -= 1
-        } else {
-            if (removeFromList != null) {
-                removeFromList()
-            }
         }
+        onCountChange(count)
     }
 
     fun handleAdd() {
         count.value += 1
+        onCountChange(count)
     }
 
     Box(
@@ -194,18 +208,20 @@ fun CartItemCount(_count: Int, removeFromList: (() -> Unit)?) {
 }
 
 @Composable
-fun CartItemListBuilder(itemList: MutableList<Map<ItemPrice, Int>>) {
+fun CartItemListBuilder(
+    itemList: MutableList<Map<ItemPrice, Int>>,
+    selectedItem: MutableList<Map<ItemPrice, Int>>
+) {
     val coroutineScope = rememberCoroutineScope()
 
     @Composable
-    fun itemToCartItem(ip: ItemPrice, count: Int): Unit {
-        return CartItem(
+    fun itemToCartItem(ip: ItemPrice, count: Int) {
+        CartItem(
             _state = false,
-            productId = ip.item.id!!,
-            productName = ip.item.item!!,
-            price = ip.price,
-            count = count,
-            onClick = null
+            item = ip,
+            count = remember { mutableStateOf(count) },
+            onClick = null,
+            selectedItem = selectedItem
         )
     }
 
@@ -216,35 +232,3 @@ fun CartItemListBuilder(itemList: MutableList<Map<ItemPrice, Int>>) {
         }
     }
 }
-
-@Preview
-@Composable
-fun CartItemPreview() {
-    MaterialTheme {
-        Surface {
-            CartItem(
-                _state = false,
-                productId = "1",
-                productName = "Product Name",
-                price = 1.0,
-                count = 1,
-                onClick = null
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun CountPreview() {
-    fun removeFromList() {
-        Log.v("CountPreview", "Remove from list")
-    }
-
-    MaterialTheme {
-        Surface {
-            CartItemCount(_count = 1, removeFromList = { removeFromList() })
-        }
-    }
-}
-

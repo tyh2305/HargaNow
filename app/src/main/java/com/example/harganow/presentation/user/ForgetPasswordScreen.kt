@@ -31,10 +31,10 @@ fun ForgetPasswordScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    fun CallSendResetPassword()
+    fun CallSendResetPassword(email: String)
     {
         coroutineScope.launch{
-            authViewModel.sendResetPassword()
+            authViewModel.sendResetPassword(email)
             { result ->
                 when (result) {
                     is Result.Success -> {
@@ -97,7 +97,7 @@ fun ForgetPasswordScreen(
                         return@Button
                     }
                     // TODO: Sent email to user
-                    CallSendResetPassword()
+                    CallSendResetPassword(email)
                 },
                 modifier = Modifier
                     .fillMaxWidth(),

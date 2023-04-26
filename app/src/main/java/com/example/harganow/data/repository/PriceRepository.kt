@@ -50,11 +50,14 @@ class PriceRepository {
         val dataOrException = DataOrException<List<ItemPriceData>, Exception>()
         try {
             dataOrException.data =
-                Firestore.ColRefFilter(collectionName, "premise", premiseId)
-                    .whereEqualTo("item", itemId).get().await()
+                Firestore.ColRefFilter(collectionName, "premise_code", premiseId)
+                    .whereEqualTo("item_code", itemId).get().await()
                     .map { document ->
                         document.toObject(ItemPriceData::class.java)
                     }
+            if(dataOrException.data!!.isEmpty()) {
+                throw FirebaseFirestoreException("No data found", FirebaseFirestoreException.Code.NOT_FOUND)
+            }
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, "Error getting documents: ", e)
             dataOrException.exception = e
@@ -94,7 +97,7 @@ class PriceRepository {
                 if (itemPrice.data == null) {
                     throw Exception(itemPrice.exception)
                 }
-                totalPrice += (itemPrice.data as ItemPriceData).price * item.values.first()
+                totalPrice += (itemPrice.data as ItemPriceData).price!!.toDouble() * item.values.first()
             }
             dataOrException.data = totalPrice
         } catch (e: FirebaseFirestoreException) {

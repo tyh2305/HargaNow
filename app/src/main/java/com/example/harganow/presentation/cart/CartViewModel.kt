@@ -6,6 +6,7 @@ import ItemRepository
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewModelScope
 import com.example.harganow.data.repository.CartRepository
 import com.example.harganow.data.repository.UserRepository
@@ -36,6 +37,7 @@ class CartViewModel : ViewModel() {
     var loading = mutableStateOf(false)
     val premiseId: String = "18098"
     var data: MutableList<Map<ItemPrice, Int>> = mutableListOf()
+    var price: Double = 0.0
 
     init {
         getData()
@@ -44,49 +46,20 @@ class CartViewModel : ViewModel() {
     private fun getData() {
         viewModelScope.launch {
             loading.value = true
-//            if (cartItemIdList != null) {
-//                for (itemId in cartItemIdList) {
-//                    Log.d(TAG, "fetchItem: $itemId")
-//                    var doe = itemRepository.getItemWithId(itemId.toString())
-//                    Log.d(TAG, "fetchItemDone: ${doe.data}")
-//                    cartItemList.add(doe.data!!)
-//                    Log.d(TAG, "addToList: ${cartItemList.size}")
-//                }
-//            }
-//            fetchItemPrice()
             data = cartRepository.getCartData(premiseId)
+            getPrice()
             loading.value = false
         }
     }
 
-
-    fun fetchItemPrice() {
-        val date: ItemDate = ItemDate(18, 4, 2023)
-//        val premise: Premise = Premise(
-//            id = "1",
-//            name = "Tesco",
-//            type = Place.PASAR_RAYA.toString(),
-//            district = "Wangsa Maju",
-//            state = State.KUALA_LUMPUR.toString(),
-//        )
-        val price: Double = 19.90
-
-//        if (cartItemIdList != null) {
-//            for (item in cartItemList) {
-////                cartItemPriceList.plus(itemRepository.getItemPriceWithId(itemId))
-//                cartItemPriceList.add(
-//                    ItemPrice(
-//                        price = price,
-//                        date = date,
-//                        item = item,
-//                        premise = premise
-//                    )
-//                )
-//            }
-//        } else {
-//            Log.d(TAG, "fetchItemPrice: cartItemIdList is null")
-//        }
+    private fun getPrice() {
+        var totalPrice: Double = 0.0
+        for (item in data) {
+            for (itemPrice in item.keys) {
+                totalPrice += itemPrice.price * item[itemPrice]!!
+            }
+        }
+        price = totalPrice
     }
-
 
 }

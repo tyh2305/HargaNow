@@ -13,15 +13,15 @@ data class ItemDate(
     companion object {
         fun fromString(input: String): ItemDate? {
             // Use regex to validate input
-            var reg = Regex("^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}\$")
+            var reg = Regex("^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])\$")
             if (reg.matches(input)) {
-                val date = input.split("/")
+                val date = input.split("-")
                 val day = date[0].toInt()
                 val month = date[1].toInt()
                 val year = date[2].toInt()
                 return ItemDate(day, month, year)
             } else {
-                return null
+                return ItemDate(1,1,2023)
             }
         }
 

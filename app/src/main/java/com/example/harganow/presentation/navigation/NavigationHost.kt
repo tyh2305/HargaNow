@@ -16,7 +16,7 @@ import com.example.harganow.presentation.user.*
 fun MyApp() {
     val navController = rememberNavController()
 
-    NavHost(navController, startDestination = "announcement") {
+    NavHost(navController, startDestination = "home") {
         composable("home") {
             HomeScreen(
                 navigateToLogin = { navController.navigate("login") },
