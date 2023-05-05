@@ -95,7 +95,7 @@ class CartRepository {
 
     suspend fun getCartData(premiseId: String): MutableList<Map<ItemPrice, Int>> {
         val itemRepository = ItemRepository()
-        val priceRepository = PriceRepository()
+//        val priceRepository = PriceRepository()
         var cartDoe: DataOrException<Cart, Exception>? = getCart(premiseId)
         if (cartDoe == null) {
             throw Exception("Cart not found")
@@ -114,7 +114,7 @@ class CartRepository {
         val itemIds = items.map { item -> item.id }
         var priceList = mutableListOf<ItemPriceData>()
         itemIds.map { item ->
-            var temp = priceRepository.getPriceWithPremiseAndItem(
+            var temp = PriceRepository.getPriceWithPremiseAndItem(
                 itemId = item.toString(),
                 premiseId = premiseId
             )
