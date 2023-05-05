@@ -1,3 +1,43 @@
 <resources>
     <string name="app_name">VerifyCompose</string>
+    <string name="selectPremise">Select Premise</string>
+    <string name="state_label">State</string>
+    <string name="district_label">District</string>
+    <string name="premise_label">Premise</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="compare_prices">Compare Prices</string>
+    <string name="see_alternatives">See Alternatives\n</string>
+    <string name="view_all">View All</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string-array name="stateNames">
+        <item>Perak</item>
+        <item>Melaka</item>
+        <item>W.P. Putrajaya</item>
+        <item>Perlis</item>
+        <item>Negeri Sembilan</item>
+        <item>W.P. Kuala Lumpur</item>
+        <item>Selangor</item>
+        <item>Sabah</item>
+        <item>W.P. Labuan</item>
+        <item>Kelantan</item>
+        <item>Kedah</item>
+        <item>Sarawak</item>
+        <item>Johor</item>
+    </string-array>
+    <string-array name="W.P.KualaLumpurDistrictNames">
+        <item>Wangsa Maju</item>
+        <item>Setiawangsa</item>
+        <item>Titiwangsa</item>
+        <item>Batu</item>
+        <item>Bukit Bintang</item>
+    </string-array>
+    <string-array name="WangsaMajuPremise">
+        <item>AEON BIG ( DANAU KOTA )</item>
+        <item>AEON BIG ( WANGSA MAJU )</item>
+        <item>AEON ( WANGSA MAJU )</item>
+        <item>MY MYDIN ( DANAU SAUJANA )</item>
+        <item>ECONSAVE CASH AND CARRY ( SETAPAK CENTRAL )</item>
+    </string-array>
 </resources>
+
