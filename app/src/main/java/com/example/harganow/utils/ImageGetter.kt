@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
@@ -59,4 +60,19 @@ fun SSLUnsafeImage(context: Context, url: String, contentDescription: String) {
     }
     val painter = rememberImagePainter(request = request, imageLoader = imageLoader)
     Image(painter = painter, contentDescription = contentDescription)
+}
+
+@Composable
+fun SSLUnsafeImage(context: Context, url: String, contentDescription: String, modifier: Modifier) {
+    val imageLoader = remember {
+        ImageLoader.Builder(context).okHttpClient(createUnsafeOkHttpClient(context)).build()
+    }
+    val request = remember {
+        ImageRequest.Builder(context).data(url).build()
+    }
+    val painter = rememberImagePainter(request = request, imageLoader = imageLoader)
+    Image(painter = painter,
+        contentDescription = contentDescription,
+        modifier = modifier
+    )
 }
