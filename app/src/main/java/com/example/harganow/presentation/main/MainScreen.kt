@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenuItem
@@ -32,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,52 +53,49 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.harganow.R
+import com.example.harganow.data.repository.PriceRepository
+import com.example.harganow.domain.model.ItemPrice
 import com.example.harganow.utils.NavInfo
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun MainScreen(
     navigateToCart: () -> Unit,
     navigateToProductDetail: () -> Unit,
     navigateToItemGroupScreen: () -> Unit,
     navigateToSearch: () -> Unit,
-    mainViewModel: MainViewModel = MainViewModel()
 ) {
-
     val tag = "HomeScreen"
-//    val context = LocalContext.current
-//
-//    var openDialog by remember { mutableStateOf(true) }
-//    var loadingFin by remember { mutableStateOf(false) }
-//
-//    var openDialogUpdate = {
-//        openDialog = false
-//    }
-//
-//    var loadingFinUpdate = {
-//        loadingFin = true
-//    }
-//
-//
-//    Box(Modifier.verticalScroll(rememberScrollState())) {
-//
-//
-//        if(openDialog){
-//            LocationDialog(mainViewModel = mainViewModel, loadCancel = false, openDialogUpdate)
-//        }
 
-//        if(loadingFin){
-//
-//        }
+    var openDialog by rememberSaveable { mutableStateOf(true) }
+    var loadingFin by rememberSaveable { mutableStateOf(false) }
 
-        Column() {
+    val openDialogUpdate = {
+        openDialog = false
+    }
 
-            CircularProgressBar(isDisplayed = mainViewModel.loading.value)
-            if(!mainViewModel.loading.value){
-                HomeScreenHeader(navigateToSearch, mainViewModel, navigateToCart)
-                ContentList(mainViewModel, navigateToProductDetail, navigateToItemGroupScreen)
+    val loadingFinUpdate = {
+        loadingFin = true
+    }
+
+    val mainViewModel = MainViewModel(loadingFinUpdate)
+
+    if (openDialog) {
+        LocationDialog(mainViewModel = mainViewModel, loadCancel = false, openDialogUpdate)
+    }
+
+    Box(Modifier.verticalScroll(rememberScrollState())) {
+        if (loadingFin) {
+            Column {
+                CircularProgressBar(isDisplayed = mainViewModel.loading.value)
+                if (!mainViewModel.loading.value) {
+                    HomeScreenHeader(navigateToSearch, mainViewModel, navigateToCart)
+                    ContentList(mainViewModel, navigateToProductDetail, navigateToItemGroupScreen)
+                }
+                Log.v(tag, "content loaded")
             }
-            Log.v(tag, "content loaded")
         }
+    }
 }
 
 @ExperimentalCoroutinesApi
@@ -113,23 +113,17 @@ fun HomeScreenHeader(
     mainViewModel: MainViewModel,
     navigateToCart: () -> Unit
 ) {
-//    var openDialog by remember { mutableStateOf(false) }
-//
-//    var openDialogUpdate = {
-//        openDialog = false
-//    }
-//
-//    if(openDialog){
-////        LocationDialog(mainViewModel = mainViewModel, loadCancel = true, openDialogUpdate)
-//    }
+    var openDialog by remember { mutableStateOf(false) }
 
-    var premise = String()
+    val openDialogUpdate = {
+        openDialog = false
+    }
 
-//    if(mainViewModel.premise.premise.isNotEmpty()){
-//
-//    }
+    if(openDialog){
+        LocationDialog(mainViewModel = mainViewModel, loadCancel = true, openDialogUpdate)
+    }
 
-    premise = mainViewModel.premise.premise
+    val premiseName: String = PriceRepository.itemWithLatestPriceList[0].premise.premise
 
     Surface(
         elevation = 20.dp,
@@ -154,7 +148,7 @@ fun HomeScreenHeader(
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
                             .clickable {
-//                                    openDialog = true
+                                    openDialog = true
                             }
                     ){
                         Row{
@@ -173,7 +167,7 @@ fun HomeScreenHeader(
                                     .padding(start = 8.dp, top = 8.dp)
 //                            .width(225.dp)
                             ) {
-                                Text(text = premise, color = Color.White, fontWeight = FontWeight.Bold, overflow = TextOverflow.Ellipsis, maxLines = 1)
+                                Text(text = premiseName, color = Color.White, fontWeight = FontWeight.Bold, overflow = TextOverflow.Ellipsis, maxLines = 1)
                             }
                         }
                     }
@@ -234,9 +228,19 @@ fun ContentList(
         }
         Spacer(modifier = Modifier.padding(24.dp))
 
+        val itemGroupItemWithPriceMap = LinkedHashMap<String, List<ItemPrice>>()
+
+        for (i in mainViewModel.itemGroupNames.indices){
+            itemGroupItemWithPriceMap[mainViewModel.itemGroupNames[i]] = PriceRepository.itemWithLatestPriceList.filter { it.item.item_group == mainViewModel.itemGroupNames[i] }
+        }
+
+        //Remove empty list from itemGroupItemWithPriceMap
+        itemGroupItemWithPriceMap.entries.removeIf { it.value.isEmpty() }
+
         if(!mainViewModel.loading.value) {
-            for(key in mainViewModel.itemGroupItemWithPriceMap.keys){
-                ScrollableProductItemGroup(itemGroupName = key, mainViewModel = mainViewModel, navigateToProductDetail, navigateToItemGroupScreen)
+            for(item in itemGroupItemWithPriceMap){
+                ScrollableProductItemGroup(navigateToProductDetail, navigateToItemGroupScreen,item.value
+                )
                 Spacer(modifier = Modifier.padding(24.dp))
             }
         }
@@ -327,11 +331,12 @@ fun CategoryCircle(
 
 @Composable
 fun ScrollableProductItemGroup(
-    itemGroupName: String,
-    mainViewModel: MainViewModel,
+//    itemGroupName: String,
     navigateToProductDetail: () -> Unit,
     navigateToItemGroupScreen: () -> Unit,
+    itemWithPriceList: List<ItemPrice>
 ) {
+    val itemGroupName = itemWithPriceList[0].item.item_group
 
     Column(
         modifier = Modifier
@@ -340,7 +345,7 @@ fun ScrollableProductItemGroup(
     ) {
         Row {
             Text(
-                text = itemGroupName,
+                text = itemGroupName!!,
                 color = Orange,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
@@ -368,7 +373,7 @@ fun ScrollableProductItemGroup(
 
         }
 
-        ProductCardLazyRowBuilder(itemListWithPrice = mainViewModel.itemGroupItemWithPriceMap[itemGroupName] ?: listOf(), navigateToProductDetail = navigateToProductDetail)
+        ProductCardLazyRowBuilder(itemWithPriceList = itemWithPriceList, navigateToProductDetail = navigateToProductDetail)
     }
 }
 
@@ -376,7 +381,7 @@ fun ScrollableProductItemGroup(
 fun LocationDialog(
     mainViewModel: MainViewModel,
     loadCancel: Boolean,
-//    openDialogUpdate: () -> Unit,
+    openDialogUpdate: () -> Unit,
 ) {
 
     Dialog(
@@ -403,7 +408,7 @@ fun LocationDialog(
                         if(loadCancel){
                             Button(
                                 onClick = {
-//                                    openDialogUpdate()
+                                    openDialogUpdate()
                                 },
                                 modifier = Modifier
                                     .padding(8.dp)
@@ -413,8 +418,8 @@ fun LocationDialog(
                         }
                         Button(
                             onClick = {
-//                                openDialogUpdate()
-//                                mainViewModel.getPremiseData()
+                                openDialogUpdate()
+                                mainViewModel.getPremiseData()
                             },
                             modifier = Modifier
                                 .padding(8.dp)

@@ -13,9 +13,8 @@ import com.example.harganow.domain.model.Premise
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-//    loadingFinUpdate: () -> Unit
+    var loadingFinUpdate: () -> Unit
 ) : ViewModel() {
-//    var loadingFinUpdate = loadingFinUpdate
 
     private val itemRepository: ItemRepository = ItemRepository()
     private val premiseRepository: PremiseRepository = PremiseRepository()
@@ -23,14 +22,13 @@ class MainViewModel(
     val tag = "HomeViewModel"
 
     var loading = mutableStateOf(false)
-    private val premiseId: String = "18098"
+    private lateinit var premiseId: String
 
     //TODO: implement
     var premiseName: String = ""
-    var premise: Premise = Premise()
+//    var premise: Premise = Premise()
 
-
-    private val itemGroupNames = listOf(
+    val itemGroupNames = listOf(
         "BARANGAN SEGAR",
         "MAKANAN SIAP MASAK",
         "MINUMAN",
@@ -67,10 +65,10 @@ class MainViewModel(
 
 //    var itemWithPriceListDoe = DataOrException<List<ItemPriceData>, Exception>()
 
-    val itemGroupItemWithPriceMap = LinkedHashMap<String, List<ItemPrice>>()
+//    val itemGroupItemWithPriceMap = LinkedHashMap<String, List<ItemPrice>>()
 
     init {
-        getData()
+//        getData()
     }
 
     private fun getData() {
@@ -83,7 +81,6 @@ class MainViewModel(
 
                 // TODO: change to use premise.id
                 for(itemId in itemIds){
-                    // TODO: change to use premise.id
                     itemWithPriceDataListDoe = PriceRepository.getLatestPriceWithPremiseAndItem(premiseId,itemId)
                     if(itemWithPriceDataListDoe.exception == null){
                         itemWithPriceDataList = itemWithPriceDataListDoe.data!!
@@ -105,41 +102,45 @@ class MainViewModel(
                 PriceRepository.itemLoaded = true
             }
 
-            val itemWithPrice = PriceRepository.itemWithLatestPriceList
+//            val itemWithPrice = PriceRepository.itemWithLatestPriceList
+//
+//            for (i in itemGroupNames.indices){
+//                itemGroupItemWithPriceMap[itemGroupNames[i]] = itemWithPrice.filter { it.item.item_group == itemGroupNames[i] }
+//            }
+//
+//            //Remove empty list from itemGroupItemWithPriceMap
+//            itemGroupItemWithPriceMap.entries.removeIf { it.value.isEmpty() }
 
-            for (i in itemGroupNames.indices){
-                itemGroupItemWithPriceMap[itemGroupNames[i]] = itemWithPrice.filter { it.item.item_group == itemGroupNames[i] }
+            loading.value = false
+            if(!loading.value){
+                loadingFinUpdate()
+            }
+        }
+    }
+
+    fun getPremiseData(){
+        if(premiseName == ""){
+            return
+        }
+
+        viewModelScope.launch {
+            loading.value = true
+
+            val premiseDataDoe = premiseRepository.getPremiseWithName(premiseName)
+            var premiseList = listOf<Premise>()
+
+            if(premiseDataDoe.exception == null){
+                premiseList = premiseDataDoe.data!!
             }
 
-            //Remove empty list from itemGroupItemWithPriceMap
-            itemGroupItemWithPriceMap.entries.removeIf { it.value.isEmpty() }
+//            premise = premiseList[0]
+            premiseId = premiseList[0].id
+            premiseName = premiseList[0].premise
+
+            getData()
 
             loading.value = false
         }
-//        loadingFinUpdate()
     }
-
-//    fun getPremiseData(){
-//        if(premiseName == ""){
-//            return
-//        }
-//
-//        viewModelScope.launch {
-//            loading.value = true
-//
-//            val premiseDataDoe = premiseRepository.getPremiseWithName(premiseName)
-//            var premiseList = listOf<Premise>()
-//
-//            if(premiseDataDoe.exception == null){
-//                premiseList = premiseDataDoe.data!!
-//            }
-//
-//            premise = premiseList[0]
-//
-//            getData()
-//
-//            loading.value = false
-//        }
-//    }
 
 }

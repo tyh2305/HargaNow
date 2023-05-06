@@ -3,7 +3,6 @@ package com.example.harganow.data.repository
 import android.util.Log
 import com.example.harganow.data.source.Firestore
 import com.example.harganow.domain.model.DataOrException
-import com.example.harganow.domain.model.ItemPrice
 import com.example.harganow.domain.model.Premise
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
@@ -11,6 +10,10 @@ import kotlinx.coroutines.tasks.await
 class PremiseRepository {
     val TAG = "PremiseRepository"
     val collectionName = "premise"
+
+    companion object{
+        var i = 0
+    }
 
     suspend fun getAllPremise(): DataOrException<List<Premise>, Exception> {
         val dataOrException = DataOrException<List<Premise>, Exception>()
@@ -66,6 +69,22 @@ class PremiseRepository {
                     .map { document ->
                         document.toObject(Premise::class.java)
                     }
+        } catch (e: FirebaseFirestoreException) {
+            Log.e(TAG, "Error getting documents: ", e)
+            dataOrException.exception = e
+        }
+        return dataOrException
+    }
+
+    suspend fun getPremiseWithName(premiseName: String): DataOrException<List<Premise>, Exception> {
+        val dataOrException = DataOrException<List<Premise>, Exception>()
+        try {
+            dataOrException.data =
+                Firestore.ColRefFilter(collectionName, "premise", premiseName).get().await()
+                    .map { document ->
+                        document.toObject(Premise::class.java)
+                    }
+            Log.d(TAG, "Premise ${premiseName} is fetched")
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, "Error getting documents: ", e)
             dataOrException.exception = e

@@ -32,30 +32,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.harganow.presentation.components.BackButton
-import com.example.harganow.utils.InitPriceRepo
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.example.harganow.presentation.components.ProductCardRowBuilder
 import com.example.harganow.presentation.main.CircularProgressBar
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
-//@Preview(showBackground = true, widthDp = 360, heightDp = 640)
-//@Composable
-//fun itemGroupScreenPreview(
-//    initPriceRepo: InitPriceRepo = InitPriceRepo()
-//) {
-//    if(!initPriceRepo.loading.value) {
-//        ItemGroupScreen(
-//            navigateToPreviousStack = {},
-//            navigateToProductDetail = {},
-//        )
-//    }
-//}
-
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun ItemGroupScreen(
     navigateToPreviousStack: () -> Unit,
@@ -89,7 +76,7 @@ fun ItemGroupScreen(
                     Spacer(modifier = Modifier.padding(24.dp))
 
                     // TODO: fix image bug
-                    var filteredItemWithPriceList = if (selectedCategory == "") {
+                    val filteredItemWithPriceList = if (selectedCategory == "") {
                         itemGroupViewModel.itemWithPriceList
                     } else {
                         itemGroupViewModel.itemWithPriceList.filter { item ->
@@ -98,8 +85,8 @@ fun ItemGroupScreen(
                     }
 
                     for(i in 0..filteredItemWithPriceList.size step 2) {
-                        var firstItemWithPrice = filteredItemWithPriceList[i]
-                        var secondItemWithPrice = if(i+1 < filteredItemWithPriceList.size) {
+                        val firstItemWithPrice = filteredItemWithPriceList[i]
+                        val secondItemWithPrice = if(i+1 < filteredItemWithPriceList.size) {
                             filteredItemWithPriceList[i+1]
                         } else {
                             null

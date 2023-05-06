@@ -17,7 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
@@ -29,29 +28,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.harganow.data.repository.PriceRepository
 import com.example.harganow.presentation.components.BackButton
 import com.example.harganow.presentation.components.ProductCardRowBuilder
-import com.example.harganow.utils.InitPriceRepo
 
-@Preview
-@Composable
-fun SearchScreenPreview(
-    initPriceRepo: InitPriceRepo = InitPriceRepo()
-){
-    if(!initPriceRepo.loading.value) {
-        SearchScreen(navigateToPreviousStack = {}, navigateToProductDetail = {})
-    }
-}
 
 @Composable
 fun SearchScreen(
     navigateToPreviousStack: () -> Unit,
     navigateToProductDetail: () -> Unit,
 ) {
-    val itemWithPriceList = PriceRepository.itemWithLatestPriceList
 
     var searchQuery by remember {
         mutableStateOf("")
@@ -74,7 +61,7 @@ fun SearchScreen(
             Spacer(modifier = Modifier.padding(24.dp))
             //TODO: Image UI bug
 
-            var filteredItemWithPriceList = if (searchQuery == "") {
+            val filteredItemWithPriceList = if (searchQuery == "") {
                 PriceRepository.itemWithLatestPriceList
             } else {
                 PriceRepository.itemWithLatestPriceList.filter { it ->
@@ -84,8 +71,8 @@ fun SearchScreen(
 
             if (filteredItemWithPriceList.isNotEmpty()){
                 for(i in 0..filteredItemWithPriceList.size step 2) {
-                    var firstItemWithPrice = filteredItemWithPriceList[i]
-                    var secondItemWithPrice = if(i+1 < filteredItemWithPriceList.size) {
+                    val firstItemWithPrice = filteredItemWithPriceList[i]
+                    val secondItemWithPrice = if(i+1 < filteredItemWithPriceList.size) {
                         filteredItemWithPriceList[i+1]
                     } else {
                         null
@@ -164,11 +151,3 @@ fun SearchScreenHeader(
     }
 }
 
-
-@Preview
-@Composable
-fun test() {
-    if ("HALIA BASAH (TUA)".contains("test", ignoreCase = true)){
-        Text(text = "true")
-    }
-}
