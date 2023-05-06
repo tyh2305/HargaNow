@@ -9,7 +9,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.harganow.presentation.announcement.AnnouncementScreen
 import com.example.harganow.presentation.cart.CartScreen
 import com.example.harganow.presentation.checkout.CheckOutScreen
+import com.example.harganow.presentation.itemGroup.ItemGroupScreen
 import com.example.harganow.presentation.login.HomeScreen
+import com.example.harganow.presentation.main.MainScreen
+import com.example.harganow.presentation.productDetail.ProductDetailScreen
+import com.example.harganow.presentation.search.SearchScreen
 import com.example.harganow.presentation.user.*
 
 @Composable
@@ -28,7 +32,7 @@ fun MyApp() {
                 navigateToPreviousStack = { navController.popBackStack() },
                 navigateToRegister = { navController.navigate("register") },
                 // TODO: Change this to navigate to the main screen
-                navigateToMain = { navController.navigate("cart") },
+                navigateToMain = { navController.navigate("main") },
             )
         }
         composable("register") {
@@ -88,6 +92,32 @@ fun MyApp() {
                 navigateToPreviousStack = { navController.popBackStack() },
                 navigateToAddBankAccount = { },
                 navigateToAddCard = { },
+            )
+        }
+        composable("main") {
+            MainScreen(
+                navigateToCart = { navController.navigate("cart") },
+                navigateToProductDetail = { navController.navigate("product_detail") },
+                navigateToItemGroupScreen = { navController.navigate("item_group") },
+                navigateToSearch = { navController.navigate("search") },
+            )
+        }
+        composable("item_group") {
+            ItemGroupScreen(
+                navigateToPreviousStack = { navController.popBackStack() },
+                navigateToProductDetail = { navController.navigate("product_detail") },
+            )
+        }
+        composable("product_detail") {
+            ProductDetailScreen(
+                navigateToPreviousStack = { navController.popBackStack() },
+                navigateToProductDetail = { navController.navigate("product_detail") },
+            )
+        }
+        composable("search"){
+            SearchScreen(
+                navigateToPreviousStack = { navController.popBackStack() },
+                navigateToProductDetail = { navController.navigate("product_detail") },
             )
         }
     }

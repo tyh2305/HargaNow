@@ -14,6 +14,7 @@ object PriceRepository {
     val collectionName = "price"
     var itemWithLatestPriceList: MutableList<ItemPrice> = mutableListOf()
     var itemWithAllPriceMap: MutableMap<String, List<ItemPrice>> = mutableMapOf()
+    var itemLoaded = false
     var i = 0
 
 

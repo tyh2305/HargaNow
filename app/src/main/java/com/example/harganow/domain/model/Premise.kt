@@ -64,6 +64,34 @@ fun stateToString(state: State): String {
     }
 }
 
+enum class District {
+    WANGSA_MAJU,
+}
+
+fun districtToString(district: District): String {
+    return when (district) {
+        District.WANGSA_MAJU -> "Wangsa Maju"
+    }
+}
+
+enum class PremiseName{
+    AEON_BIG_DANAU_KOTA,
+    AEON_BIG_WANGSA_MAJU,
+    AEON_WANGSA_MAJU,
+    MYDIN_DANAU_SAUJANA,
+    ECONSAVE_SETAPAK_CENTRAL
+}
+
+fun districtToString(premiseName: PremiseName): String {
+    return when (premiseName){
+        PremiseName.AEON_BIG_DANAU_KOTA -> "AEON BIG ( DANAU KOTA )"
+        PremiseName.AEON_BIG_WANGSA_MAJU -> "AEON BIG ( WANGSA MAJU )"
+        PremiseName.AEON_WANGSA_MAJU -> "AEON ( WANGSA MAJU )"
+        PremiseName.MYDIN_DANAU_SAUJANA -> "MY MYDIN ( DANAU SAUJANA )"
+        PremiseName.ECONSAVE_SETAPAK_CENTRAL -> "ECONSAVE CASH AND CARRY ( SETAPAK CENTRAL )"
+    }
+}
+
 data class Premise(
     @DocumentId
     val id: String,
