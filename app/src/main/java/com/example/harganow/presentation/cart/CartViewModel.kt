@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CartViewModel : ViewModel() {
+class CartViewModel(chosenList: MutableList<Map<ItemPrice, Int>>) : ViewModel() {
     private val itemRepository: ItemRepository = ItemRepository()
     private val userRepository: UserRepository = UserRepository()
     private val cartRepository: CartRepository = CartRepository()
@@ -33,6 +33,7 @@ class CartViewModel : ViewModel() {
 //    val cartItemList: ArrayList<Item> = ArrayList<Item>()
 //    val cartItemPriceList: ArrayList<ItemPrice> = ArrayList<ItemPrice>()
     val TAG = "CartViewModel"
+    var chosenList: MutableList<Map<ItemPrice, Int>> = chosenList
 
     var loading = mutableStateOf(false)
     val premiseId: String = "18098"

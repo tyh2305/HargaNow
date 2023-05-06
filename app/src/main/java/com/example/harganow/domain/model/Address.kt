@@ -1,12 +1,17 @@
 package com.example.harganow.domain.model
 
+import com.google.firebase.firestore.DocumentId
+
 data class Address(
-    val contact: Contact,
-    val unitNumber: String,
-    val addressLine1: String,
-    val addressLine2: String,
-    val poscode: String,
-    val city: String,
-    val state: String,
-)
+    @DocumentId
+    var id: String?,
+    var unitNumber: String?,
+    var addressLine1: String?,
+    var addressLine2: String?,
+    var poscode: String?,
+    var city: String?,
+    var state: String?,
+) {
+    constructor() : this(null, null, null, null, null, null, null)
+}
 

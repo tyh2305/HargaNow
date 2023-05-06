@@ -3,6 +3,8 @@ package com.example.harganow.domain.model
 import com.example.harganow.data.auth.FireAuthRepository
 import com.google.firebase.firestore.DocumentId
 
+// TODO: Fix function in register and other section related to user display name
+
 data class AppUser(
     @DocumentId
     var id: String?,

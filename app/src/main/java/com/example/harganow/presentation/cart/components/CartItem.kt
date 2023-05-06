@@ -40,9 +40,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.harganow.data.repository.CartRepository
@@ -142,6 +146,9 @@ fun CartItem(
             ) {
                 Text(
                     text = productName,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2,
+                    fontSize = TextUnit(12F, TextUnitType.Sp),
                 )
                 Text(
                     text = priceToString(price)
@@ -210,7 +217,8 @@ fun CartItemCount(_count: MutableState<Int>, onCountChange: ((MutableState<Int>)
 @Composable
 fun CartItemListBuilder(
     itemList: MutableList<Map<ItemPrice, Int>>,
-    selectedItem: MutableList<Map<ItemPrice, Int>>
+    selectedItem: MutableList<Map<ItemPrice, Int>>,
+    modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -225,10 +233,14 @@ fun CartItemListBuilder(
         )
     }
 
-    LazyColumn(
+    Box(
+        modifier = modifier
     ) {
-        items(itemList.size) { index ->
-            itemToCartItem(itemList[index].keys.first(), itemList[index].values.first())
+        LazyColumn(
+        ) {
+            items(itemList.size) { index ->
+                itemToCartItem(itemList[index].keys.first(), itemList[index].values.first())
+            }
         }
     }
 }

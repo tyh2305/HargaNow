@@ -3,9 +3,11 @@ package com.example.harganow.presentation.navigation
 import LoginScreen
 import RegisterScreen
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.harganow.domain.model.ItemPrice
 import com.example.harganow.presentation.announcement.AnnouncementScreen
 import com.example.harganow.presentation.cart.CartScreen
 import com.example.harganow.presentation.checkout.CheckOutScreen
@@ -20,6 +22,13 @@ import com.example.harganow.presentation.user.*
 fun MyApp() {
     val navController = rememberNavController()
 
+    val checkOutData: MutableList<Map<ItemPrice, Int>> = remember { mutableListOf() }
+
+    fun handleBack() {
+        checkOutData.clear()
+        navController.popBackStack()
+    }
+
     NavHost(navController, startDestination = "home") {
         composable("home") {
             HomeScreen(
@@ -32,7 +41,7 @@ fun MyApp() {
                 navigateToPreviousStack = { navController.popBackStack() },
                 navigateToRegister = { navController.navigate("register") },
                 // TODO: Change this to navigate to the main screen
-                navigateToMain = { navController.navigate("main") },
+                navigateToMain = { navController.navigate("cart") },
             )
         }
         composable("register") {
@@ -82,10 +91,14 @@ fun MyApp() {
             CartScreen(
                 navigateToPreviousStack = { navController.popBackStack() },
                 navigateToCheckout = { navController.navigate("checkout") },
+                chosenList = checkOutData,
             )
         }
         composable("checkout") {
-            CheckOutScreen { navController.popBackStack() }
+            CheckOutScreen(
+                navigateToPreviousStack = { handleBack() },
+                chosenList = checkOutData
+            )
         }
         composable("bank_accounts_cards") {
             BankAccountsCardsScreen(
@@ -114,7 +127,7 @@ fun MyApp() {
                 navigateToProductDetail = { navController.navigate("product_detail") },
             )
         }
-        composable("search"){
+        composable("search") {
             SearchScreen(
                 navigateToPreviousStack = { navController.popBackStack() },
                 navigateToProductDetail = { navController.navigate("product_detail") },

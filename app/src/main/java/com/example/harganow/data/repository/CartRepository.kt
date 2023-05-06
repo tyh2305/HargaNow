@@ -20,6 +20,21 @@ class CartRepository {
     val authRepository: FireAuthRepository = FireAuthRepository()
     val currentUser = authRepository.getCurrentUser()
 
+    // TODO handle case where no cart available
+    suspend fun newCart(premiseId: String) {
+        if (currentUser?.uid == null) {
+            throw Exception("User not logged in")
+        }
+
+        val cart = Cart(currentUser.uid + premiseId, null)
+        try {
+            DocRef(collectionName, currentUser.uid + premiseId).set(cart).await()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting documents: ", e)
+            throw e
+        }
+    }
+
     suspend fun getCart(premiseId: String): DataOrException<Cart, Exception>? {
         val doe: DataOrException<Cart, Exception> = DataOrException<Cart, Exception>()
         if (currentUser?.uid == null) {
@@ -29,6 +44,9 @@ class CartRepository {
         try {
             doe.data = DocRef(collectionName, currentUser.uid + premiseId).get().await()
                 .toObject(Cart::class.java)
+            if (doe.data == null) {
+                newCart(premiseId)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error getting documents: ", e)
             doe.exception = e
