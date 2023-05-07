@@ -14,6 +14,7 @@ import com.example.harganow.presentation.checkout.CheckOutScreen
 import com.example.harganow.presentation.itemGroup.ItemGroupScreen
 import com.example.harganow.presentation.login.HomeScreen
 import com.example.harganow.presentation.main.MainScreen
+import com.example.harganow.presentation.order.OrderScreen
 import com.example.harganow.presentation.productDetail.ProductDetailScreen
 import com.example.harganow.presentation.search.SearchScreen
 import com.example.harganow.presentation.user.*
@@ -41,7 +42,7 @@ fun MyApp() {
                 navigateToPreviousStack = { navController.popBackStack() },
                 navigateToRegister = { navController.navigate("register") },
                 // TODO: Change this to navigate to the main screen
-                navigateToMain = { navController.navigate("cart") },
+                navigateToMain = { navController.navigate("main") },
             )
         }
         composable("register") {
@@ -98,6 +99,12 @@ fun MyApp() {
             CheckOutScreen(
                 navigateToPreviousStack = { handleBack() },
                 chosenList = checkOutData
+            )
+        }
+        composable("order") {
+            OrderScreen(
+                navigateToPreviousStack = { navController.popBackStack() },
+                navigateToCheckOut = { navController.navigate("checkout") },
             )
         }
         composable("bank_accounts_cards") {

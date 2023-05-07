@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,6 +47,7 @@ import com.example.harganow.presentation.components.Header
 import com.example.harganow.ui.theme.Orange
 import com.example.harganow.utils.ImageGetter
 import com.example.harganow.utils.SSLUnsafeImage
+import kotlinx.coroutines.launch
 
 fun Double.format(digits: Int) = "%.${digits}f".format(this)
 
@@ -218,8 +220,9 @@ fun PaymentOption(modifier: Modifier = Modifier) {
 @Composable
 fun PlaceOrderButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: suspend () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
 
     Box(
         modifier
@@ -238,7 +241,11 @@ fun PlaceOrderButton(
                     }
                 })
             Button(
-                onClick = onClick,
+                onClick = {
+                    scope.launch {
+                        onClick()
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Orange,
                     contentColor = Color.White
@@ -316,7 +323,7 @@ fun CheckOutPreview() {
 @Composable
 fun CheckOutBuilder(
     itemList: MutableList<Map<ItemPrice, Int>>,
-    navigateToOrder: () -> Unit,
+    navigateToOrder: suspend () -> Unit,
     navigateToPreviousStack: () -> Unit
 ) {
     var totalPrice = 0.0
