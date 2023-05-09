@@ -5,20 +5,35 @@ import RegisterScreen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.toUpperCase
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -42,7 +57,7 @@ fun MyApp() {
     val navController = rememberNavController()
 
     val checkOutData: MutableList<Map<ItemPrice, Int>> = remember { mutableListOf() }
-    val bottomBarState = rememberSaveable { mutableStateOf(true) }
+    val bottomBarState = rememberSaveable { mutableStateOf(false) }
 
     val items = listOf(
         Screen.Home, Screen.Order, Screen.Announcement, Screen.Profile
@@ -53,28 +68,51 @@ fun MyApp() {
         navController.popBackStack()
     }
 
+    fun updateBottomBarState(currentDestination: String) {
+        bottomBarState.value = !bottomBarState.value
+        val notShowBottomBarList = arrayListOf<String>(
+            "home", "login", "register", "policy", "checkout", "cart", "search", "null"
+        )
+
+        // Check if current destination route in not show bottom bar list
+        bottomBarState.value = !notShowBottomBarList.contains(currentDestination)
+    }
+
+    val iconList: List<ImageVector> = listOf(
+        Icons.Filled.Home, Icons.Filled.List, Icons.Filled.Notifications, Icons.Filled.AccountCircle
+    )
+
+    val unFocusIconList: List<ImageVector> = listOf(
+        Icons.Outlined.Home,
+        Icons.Outlined.List,
+        Icons.Outlined.Notifications,
+        Icons.Outlined.AccountCircle
+    )
 
 
     Scaffold(
         bottomBar = {
+            updateBottomBarState(navController.currentDestination?.route.toString())
             if (bottomBarState.value) BottomNavigation {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
-                val notShowBottomBarList = arrayListOf<String>(
-                    "home", "login", "register", "policy", "checkout", "cart", "search"
-                )
-
-                // Check if current destination route in not show bottom bar list
-                bottomBarState.value = !notShowBottomBarList.contains(currentDestination?.route)
 
                 items.forEach { screen ->
                     BottomNavigationItem(icon = {
                         Icon(
-                            Icons.Filled.Favorite,
-                            contentDescription = null
+                            if (currentDestination?.hierarchy?.any { it.route == screen.route } == true)
+                                iconList[screen.icon]
+                            else
+                                unFocusIconList[screen.icon],
+                            contentDescription = screen.label
                         )
                     },
-                        label = { Text(screen.route.uppercase()) },
+                        label = {
+                            Text(
+                                text = screen.label,
+                                fontSize = 2.em,
+                            )
+                        },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
                             navController.navigate(screen.route) {
