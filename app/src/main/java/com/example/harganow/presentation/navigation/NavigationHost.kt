@@ -226,6 +226,8 @@ fun MyApp() {
                 ItemGroupScreen(
                     navigateToPreviousStack = { navController.popBackStack() },
                     navigateToProductDetail = { navController.navigate("product_detail") },
+                    navigateToCart = { navController.navigate("cart") },
+                    navigateToSearch = { navController.navigate("search") },
                 )
             }
             composable("product_detail") {
@@ -238,6 +240,7 @@ fun MyApp() {
                 SearchScreen(
                     navigateToPreviousStack = { navController.popBackStack() },
                     navigateToProductDetail = { navController.navigate("product_detail") },
+                    navigateToCart = { navController.navigate("cart") },
                 )
             }
         }

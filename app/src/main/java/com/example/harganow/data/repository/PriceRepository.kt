@@ -37,7 +37,9 @@ object PriceRepository {
         val dataOrException = DataOrException<List<ItemPriceData>, Exception>()
         try {
             dataOrException.data =
-                Firestore.ColRefFilter(collectionName, "premise_code", premiseId).orderBy("date", Query.Direction.DESCENDING)
+                Firestore.ColRefFilter(collectionName, "premise_code", premiseId)
+                    .whereGreaterThan("date", "1970-01-01")
+                    .orderBy("date", Query.Direction.DESCENDING)
                     .limit(10).get().await() //TODO: Change limit to higher number
                     .map { document ->
                         document.toObject(ItemPriceData::class.java)

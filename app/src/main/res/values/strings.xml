@@ -11,6 +11,7 @@
     <string name="view_all">View All</string>
     <string name="add_to_cart">Add to Cart</string>
     <string name="no_product_found">No Product Found</string>
+    <string name="search">Search</string>
     <string-array name="stateNames">
         <item>Perak</item>
         <item>Melaka</item>
@@ -35,10 +36,16 @@
     </string-array>
     <string-array name="WangsaMajuPremise">
         <item>AEON BIG ( DANAU KOTA )</item>
-        <item>AEON BIG ( WANGSA MAJU )</item>
         <item>AEON ( WANGSA MAJU )</item>
         <item>MY MYDIN ( DANAU SAUJANA )</item>
-        <item>ECONSAVE CASH AND CARRY ( SETAPAK CENTRAL )</item>
     </string-array>
+    <string name="fresh_goods">Fresh Goods</string>
+    <string name="dry_goods">Dry Goods</string>
+    <string name="packaged_goods">Packaged Goods</string>
+    <string name="beverages">Beverages</string>
+    <string name="instant_food">Instant Food</string>
+    <string name="milk_and_baby_products">Milk and Baby Products</string>
+    <string name="cleaning_products">Cleaning Products</string>
+    <string name="general_products">General Products</string>
 </resources>
 

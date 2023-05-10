@@ -31,13 +31,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.harganow.data.repository.PriceRepository
 import com.example.harganow.presentation.components.BackButton
-import com.example.harganow.presentation.components.ProductCardRowBuilder
+import com.example.harganow.presentation.components.ProductCardMultipleRowBuilder
 
 
 @Composable
 fun SearchScreen(
     navigateToPreviousStack: () -> Unit,
     navigateToProductDetail: () -> Unit,
+    navigateToCart: () -> Unit,
 ) {
 
     var searchQuery by remember {
@@ -57,6 +58,7 @@ fun SearchScreen(
             SearchScreenHeader(
                 navigateToPreviousStack = navigateToPreviousStack,
                 updateSearchQuery = updateSearchQuery,
+                navigateToCart
             )
             Spacer(modifier = Modifier.padding(24.dp))
             //TODO: Image UI bug
@@ -69,30 +71,7 @@ fun SearchScreen(
                 }
             }
 
-            if (filteredItemWithPriceList.isNotEmpty()){
-                for(i in 0..filteredItemWithPriceList.size step 2) {
-                    val firstItemWithPrice = filteredItemWithPriceList[i]
-                    val secondItemWithPrice = if(i+1 < filteredItemWithPriceList.size) {
-                        filteredItemWithPriceList[i+1]
-                    } else {
-                        null
-                    }
-
-                    ProductCardRowBuilder(
-                        firstItemWithPrice = firstItemWithPrice,
-                        secondItemWithPrice = secondItemWithPrice,
-                        navigateToProductDetail = navigateToProductDetail
-                    )
-                }
-            } else {
-                ProductCardRowBuilder(
-                    firstItemWithPrice = null,
-                    secondItemWithPrice = null,
-                    navigateToProductDetail = navigateToProductDetail
-                )
-            }
-
-
+            ProductCardMultipleRowBuilder(filteredItemWithPriceList, navigateToProductDetail)
 
         }
     }
@@ -101,7 +80,8 @@ fun SearchScreen(
 @Composable
 fun SearchScreenHeader(
     navigateToPreviousStack: () -> Unit,
-    updateSearchQuery: (String) -> Unit
+    updateSearchQuery: (String) -> Unit,
+    navigateToCart: () -> Unit
 ) {
     var searchQuery by remember {
         mutableStateOf("")
@@ -113,14 +93,21 @@ fun SearchScreenHeader(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
+                .height(100.dp)
                 .background(Color.White)
         ){
-            Row(){
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ){
                 BackButton(navigateToPreviousStack = navigateToPreviousStack)
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = {searchQuery = it},
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(end = 8.dp),
                     keyboardOptions = KeyboardOptions(
                         imeAction =  ImeAction.Done
                     ),
@@ -131,18 +118,21 @@ fun SearchScreenHeader(
                     ),
                     singleLine = true,
                 )
+                // TODO: make shopping cart size bigger
                 Box(
-                    // TODO: navigate to cart
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .clickable { }
+                        .clickable {
+                            navigateToCart()
+                        }
+                        .padding(end = 8.dp)
+                        .align(Alignment.CenterVertically),
                 ){
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = "",
                         modifier = Modifier
-                            .size(40.dp)
-                            .padding(start = 15.dp),
+                            .size(50.dp),
                         tint = Color.Black,
                     )
                 }

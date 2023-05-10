@@ -13,7 +13,7 @@ import com.example.harganow.domain.model.Premise
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    var loadingFinUpdate: () -> Unit
+    private val loadingFinUpdate: () -> Unit
 ) : ViewModel() {
 
     private val itemRepository: ItemRepository = ItemRepository()
@@ -24,9 +24,7 @@ class MainViewModel(
     var loading = mutableStateOf(false)
     private lateinit var premiseId: String
 
-    //TODO: implement
     var premiseName: String = ""
-//    var premise: Premise = Premise()
 
     val itemGroupNames = listOf(
         "BARANGAN SEGAR",
@@ -39,47 +37,43 @@ class MainViewModel(
         "BARANGAN BERBUNGKUS"
     )
 
-    // For Demo Purposes TODO: remove commented out items
+    // For Demo Purposes TODO: uncomment commented out items
     private val itemIds = listOf<String>(
-        "95",
-        "88",
-        "850",
-        "847",
+        "1513", // SUSU DAN BARANGAN BAYI
+        "1514",
+        "2010",
+        "2009",
+        "1904",
+        "1551", // BARANGAN SEGAR
+        "1552",
+        "47",
         "845",
-//        "1944",
-//        "1943",
-//        "160",
-//        "1564",
-//        "1442",
-//        "2015",
-//        "2014",
-//        "2010",
-//        "2009",
-//        "1975",
-//        "992",
-//        "957",
-//        "919",
-//        "918",
-//        "917"
+        "113",
+        "160", // BARANGAN KERING
+        "129",
+        "1440",
+        "1613", // BARANGAN BERBUNGKUS
+        "1590",
+        "190",
+        "191",
+        "192",
+        "272",
+        "1494",
+        "1976",
+        "1978",
     )
-
-//    var itemWithPriceListDoe = DataOrException<List<ItemPriceData>, Exception>()
-
-//    val itemGroupItemWithPriceMap = LinkedHashMap<String, List<ItemPrice>>()
-
-    init {
-//        getData()
-    }
 
     private fun getData() {
         viewModelScope.launch {
             loading.value = true
+
+                // Have Time get all about 4k items
+
             if(!PriceRepository.itemLoaded){
                 var itemWithPriceDataListDoe: DataOrException<List<ItemPriceData>, Exception>
                 var itemWithPriceDataList: List<ItemPriceData>
                 var itemWithPriceList: List<ItemPrice>
 
-                // TODO: change to use premise.id
                 for(itemId in itemIds){
                     itemWithPriceDataListDoe = PriceRepository.getLatestPriceWithPremiseAndItem(premiseId,itemId)
                     if(itemWithPriceDataListDoe.exception == null){
@@ -98,18 +92,8 @@ class MainViewModel(
                         PriceRepository.itemWithAllPriceMap[itemId] = itemWithPriceList.reversed()
                     }
                 }
-
                 PriceRepository.itemLoaded = true
             }
-
-//            val itemWithPrice = PriceRepository.itemWithLatestPriceList
-//
-//            for (i in itemGroupNames.indices){
-//                itemGroupItemWithPriceMap[itemGroupNames[i]] = itemWithPrice.filter { it.item.item_group == itemGroupNames[i] }
-//            }
-//
-//            //Remove empty list from itemGroupItemWithPriceMap
-//            itemGroupItemWithPriceMap.entries.removeIf { it.value.isEmpty() }
 
             loading.value = false
             if(!loading.value){
@@ -133,7 +117,6 @@ class MainViewModel(
                 premiseList = premiseDataDoe.data!!
             }
 
-//            premise = premiseList[0]
             premiseId = premiseList[0].id
             premiseName = premiseList[0].premise
 

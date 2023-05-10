@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,10 +39,8 @@ import com.example.harganow.utils.NavInfo
 import com.example.harganow.utils.SSLUnsafeImage
 
 
-
 @Composable
 fun ProductCard(
-//    _state: Boolean,
     productId: String,
     productName: String,
     productUnit: String,
@@ -74,7 +73,7 @@ fun ProductCard(
     ) {
         Column(
             modifier = Modifier
-                .height(200.dp)
+                .height(220.dp)
                 .width(width)
                 .padding(8.dp),
         ){
@@ -82,7 +81,6 @@ fun ProductCard(
                 Modifier
                     .size(123.dp)
                     .clip(RoundedCornerShape(5.dp))
-//                    .border(1.dp, Orange, RoundedCornerShape(5.dp))
                     .align(Alignment.CenterHorizontally)
             ) {
                 SSLUnsafeImage(
@@ -104,79 +102,6 @@ fun ProductCard(
     }
 }
 
-//@Preview
-//@Composable
-//fun ProductCardBuildersPreview(){
-//    val itemList: List<Item> = listOf(
-//        Item(
-//            id = "1",
-//            item_category = "Fresh Goods",
-//            item_group = "Meats",
-//            item = "Whole Chicken",
-//            unit = "IDK"
-//        ),
-//        Item(
-//            id = "2",
-//            item_category = "Fresh Goods",
-//            item_group = "Meats",
-//            item = "Chicken Breast",
-//            unit = "IDK"
-//        ),
-//        Item(
-//            id = "3",
-//            item_category = "Fresh Goods",
-//            item_group = "Meats",
-//            item = "Chicken Thigh",
-//            unit = "IDK"
-//        ),
-//    )
-//
-//    var premise: Premise = Premise(
-//        id = "1",
-//        premise = "Kedai Ayamas",
-//        premise_type = "Restaurant",
-//        state = "Selangor",
-//        district = "Petaling",
-//    )
-//
-//    val date: java.util.Date = java.util.Date()
-//
-//    var itemListWithPrice: List<ItemPrice> = listOf(
-//        ItemPrice(
-//            item = itemList[0],
-//            premise = premise,
-//            price = 19.90,
-//            date = ItemDate.fromDate(date)
-//        ),
-//        ItemPrice(
-//            item = itemList[1],
-//            premise = premise,
-//            price = 19.90,
-//            date = ItemDate.fromDate(date)
-//        ),
-//        ItemPrice(
-//            item = itemList[2],
-//            premise = premise,
-//            price = 19.90,
-//            date = ItemDate.fromDate(date)
-//        )
-//    )
-//
-//    val itemPriceList: List<Double> = listOf(
-//        19.90,
-//        19.90,
-//        19.90,
-//    )
-//
-//    Column{
-////        ProductCardLazyRowBuilder(itemListWithPrice = itemListWithPrice, navigateToProductDetail = {})
-////        ProductCardRowBuilder(firstItem = itemList[0], secondItem = itemList[1], firstItemPrice = itemPriceList[0], secondItemPrice = itemPriceList[1])
-//        ProductCardGridBuilder(itemWithPriceList = itemListWithPrice, navigateToProductDetail = {})
-//
-//    }
-//
-//}
-
 @Composable
 fun ProductCardLazyRowBuilder(
     itemWithPriceList: List<ItemPrice>,
@@ -185,20 +110,34 @@ fun ProductCardLazyRowBuilder(
     val state = rememberLazyListState()
     val tag = "ProductCardLazyRowBuilder"
 
-    LazyRow(
-        state = state,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(itemWithPriceList.size) {
-            Log.v(tag, "Item : ${itemWithPriceList[it].item.id}")
-            ProductCard(
-                productId = itemWithPriceList[it].item.id!!,
-                productName = itemWithPriceList[it].item.item!!,
-                productUnit = itemWithPriceList[it].item.unit!!,
-                price = itemWithPriceList[it].price,
-                width = 150.dp,
-                navigateToProductDetail
+    if(itemWithPriceList.isNotEmpty()){
+        LazyRow(
+            state = state,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(itemWithPriceList.size) {
+                Log.v(tag, "Item : ${itemWithPriceList[it].item.id}")
+                ProductCard(
+                    productId = itemWithPriceList[it].item.id!!,
+                    productName = itemWithPriceList[it].item.item!!,
+                    productUnit = itemWithPriceList[it].item.unit!!,
+                    price = itemWithPriceList[it].price,
+                    width = 150.dp,
+                    navigateToProductDetail
+                )
+            }
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ){
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(id = R.string.no_product_found),
             )
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
@@ -206,11 +145,50 @@ fun ProductCardLazyRowBuilder(
 
 
 @Composable
+fun ProductCardMultipleRowBuilder(
+    itemWithPriceList: List<ItemPrice>,
+    navigateToProductDetail: () -> Unit
+) {
+    var firstItemWithPrice: ItemPrice
+    var secondItemWithPrice: ItemPrice?
+
+    if (itemWithPriceList.isNotEmpty()){
+        for(i in itemWithPriceList.indices step 2) {
+            firstItemWithPrice = itemWithPriceList[i]
+            secondItemWithPrice = if(i+1 < itemWithPriceList.size) {
+                itemWithPriceList[i+1]
+            } else {
+                null
+            }
+
+            ProductCardRowBuilder(
+                firstItemWithPrice = firstItemWithPrice,
+                secondItemWithPrice = secondItemWithPrice,
+                navigateToProductDetail = navigateToProductDetail
+            )
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ){
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(id = R.string.no_product_found),
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
+    }
+
+}
+
+@Composable
 fun ProductCardRowBuilder(
     firstItemWithPrice: ItemPrice?,
     secondItemWithPrice: ItemPrice?,
     navigateToProductDetail: () -> Unit
-) {
+){
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 

@@ -1,6 +1,7 @@
 package com.example.harganow.presentation.main
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
@@ -40,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,7 +58,9 @@ import androidx.compose.ui.window.Dialog
 import com.example.harganow.R
 import com.example.harganow.data.repository.PriceRepository
 import com.example.harganow.domain.model.ItemPrice
+import com.example.harganow.domain.model.convertToItemGroupNameId
 import com.example.harganow.utils.NavInfo
+
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -85,9 +90,18 @@ fun MainScreen(
     }
 
     Box(Modifier.verticalScroll(rememberScrollState())) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ){
+            Spacer(modifier = Modifier.weight(1f))
+            CircularProgressBar(isDisplayed = !loadingFin)
+            Spacer(modifier = Modifier.weight(1f))
+        }
+
         if (loadingFin) {
             Column {
-                CircularProgressBar(isDisplayed = mainViewModel.loading.value)
                 if (!mainViewModel.loading.value) {
                     HomeScreenHeader(navigateToSearch, mainViewModel, navigateToCart)
                     ContentList(mainViewModel, navigateToProductDetail, navigateToItemGroupScreen)
@@ -131,7 +145,7 @@ fun HomeScreenHeader(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(145.dp)
+                .height(120.dp)
                 .background(Orange),
         ) {
             Column(
@@ -142,13 +156,14 @@ fun HomeScreenHeader(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(48.dp)
                         .padding(bottom = 10.dp)
                 ){
                     Box(
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
                             .clickable {
-                                    openDialog = true
+                                openDialog = true
                             }
                     ){
                         Row{
@@ -163,9 +178,7 @@ fun HomeScreenHeader(
                             Column(
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
-                                    .height(55.dp)
-                                    .padding(start = 8.dp, top = 8.dp)
-//                            .width(225.dp)
+                                    .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
                             ) {
                                 Text(text = premiseName, color = Color.White, fontWeight = FontWeight.Bold, overflow = TextOverflow.Ellipsis, maxLines = 1)
                             }
@@ -194,17 +207,39 @@ fun HomeScreenHeader(
 
                 }
                 Row(
-                    Modifier.padding(top = 10.dp, bottom = 10.dp),
+                    Modifier
+                        .padding(top = 5.dp, bottom = 20.dp, start = 8.dp, end = 8.dp)
+                        .height(48.dp),
                 ){
                     Box(
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
+                            .background(Color.White, RoundedCornerShape(10.dp))
+                            .fillMaxWidth()
+                            .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
+                            .height(40.dp)
                             .clickable {
                                 navigateToSearch()
                             }
                     ){
-                        //TODO: add ICON
-                        Text(text = "Search")
+                        Row(
+                        ){
+                            Icon(
+                                painter = painterResource(id = R.drawable.baseline_search_24),
+                                contentDescription = "Search",
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically),
+//                                    .fillMaxSize(),
+                                tint = Color.Black,
+                            )
+                            // TODO: Change text
+                            Text(
+                                text = stringResource(id = R.string.search),
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(start = 8.dp),
+                                )
+                        }
                     }
                 }
             }
@@ -220,13 +255,13 @@ fun ContentList(
     navigateToItemGroupScreen: () -> Unit,
 ) {
     Column {
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.padding(5.dp))
         Row(
             Modifier.align(Alignment.CenterHorizontally)
         ){
             Categories(navigateToItemGroupScreen)
         }
-        Spacer(modifier = Modifier.padding(24.dp))
+        Spacer(modifier = Modifier.padding(5.dp))
 
         val itemGroupItemWithPriceMap = LinkedHashMap<String, List<ItemPrice>>()
 
@@ -241,7 +276,7 @@ fun ContentList(
             for(item in itemGroupItemWithPriceMap){
                 ScrollableProductItemGroup(navigateToProductDetail, navigateToItemGroupScreen,item.value
                 )
-                Spacer(modifier = Modifier.padding(24.dp))
+                Spacer(modifier = Modifier.padding(5.dp))
             }
         }
     }
@@ -268,7 +303,7 @@ fun Categories(
         Row(
         )
         {
-            CategoryCircle(226, "MINIMUM", navigateToItemGroupScreen)
+            CategoryCircle(226, "MINUMAN", navigateToItemGroupScreen)
             CategoryCircle(1970, "SUSU DAN BARANGAN BAYI", navigateToItemGroupScreen)
             CategoryCircle(1980, "PRODUK KEBERSIHAN", navigateToItemGroupScreen)
         }
@@ -313,8 +348,11 @@ fun CategoryCircle(
                     .align(Alignment.Center)
             )
         }
+
+        val categoryNameId: Int = convertToItemGroupNameId(name)
+
         Text(
-            text = name, //TODO: update this
+            text = stringResource(id = categoryNameId),
             color = Color.Black,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -329,14 +367,15 @@ fun CategoryCircle(
 }
 
 
+
 @Composable
 fun ScrollableProductItemGroup(
-//    itemGroupName: String,
     navigateToProductDetail: () -> Unit,
     navigateToItemGroupScreen: () -> Unit,
     itemWithPriceList: List<ItemPrice>
 ) {
-    val itemGroupName = itemWithPriceList[0].item.item_group
+
+    val itemGroupNameId:Int = convertToItemGroupNameId( itemWithPriceList[0].item.item_group!!)
 
     Column(
         modifier = Modifier
@@ -345,7 +384,7 @@ fun ScrollableProductItemGroup(
     ) {
         Row {
             Text(
-                text = itemGroupName!!,
+                text = stringResource(id = itemGroupNameId),
                 color = Orange,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
@@ -357,7 +396,7 @@ fun ScrollableProductItemGroup(
                 Modifier
                     .align(Alignment.CenterVertically)
                     .clickable {
-                        NavInfo.itemGroup = itemGroupName
+                        NavInfo.itemGroup = itemWithPriceList[0].item.item_group!!
                         navigateToItemGroupScreen()
                     }
             ){
@@ -389,16 +428,24 @@ fun LocationDialog(
         content = {
             Box(
                 modifier = Modifier
-                    .background(Color.White)
+                    .background(Color.White, RoundedCornerShape(10.dp))
             ){
                 Column {
+                    var selected by remember { mutableStateOf(false) }
+
+                    val updateSelected = {
+                        selected = true
+                    }
+
                     StateExposedDropdownMenuBox()
 
                     DistrictExposedDropdownMenuBox()
 
-                    PremiseExposedDropdownMenuBox(mainViewModel = mainViewModel)
+                    PremiseExposedDropdownMenuBox(mainViewModel = mainViewModel, updateSelected)
 
                     Spacer(modifier = Modifier.padding(24.dp))
+
+                    val context = LocalContext.current
 
                     Row(
                         modifier = Modifier
@@ -418,8 +465,12 @@ fun LocationDialog(
                         }
                         Button(
                             onClick = {
-                                openDialogUpdate()
-                                mainViewModel.getPremiseData()
+                                if(selected){
+                                    openDialogUpdate()
+                                    mainViewModel.getPremiseData()
+                                } else {
+                                    Toast.makeText(context, "Please select a premise", Toast.LENGTH_SHORT).show()
+                                }
                             },
                             modifier = Modifier
                                 .padding(8.dp)
@@ -506,7 +557,6 @@ fun StateExposedDropdownMenuBox(
 fun DistrictExposedDropdownMenuBox(
 ){
     val context = LocalContext.current
-//    var stateSelected: String
     // TODO: filter district by state
 
     val locationArray:Array<String> = context.resources.getStringArray(R.array.W_P_KualaLumpurDistrictNames)
@@ -542,8 +592,8 @@ fun DistrictExposedDropdownMenuBox(
 //                maxLines = 1,
             )
             ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false  }
+                expanded = false,
+                onDismissRequest = {}
             ) {
                 locationArray.forEach { location ->
                     DropdownMenuItem(
@@ -569,7 +619,8 @@ fun DistrictExposedDropdownMenuBox(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PremiseExposedDropdownMenuBox(
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    updateSelected: () -> Unit
 ){
     val context = LocalContext.current
 
@@ -615,6 +666,7 @@ fun PremiseExposedDropdownMenuBox(
                             selectedText = premise
                             expanded = false
                             mainViewModel.premiseName = premise
+                            updateSelected()
                         }
                     ) {
                         Text(

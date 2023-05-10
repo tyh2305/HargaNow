@@ -42,3 +42,22 @@ fun BackButton(navigateToPreviousStack: () -> Unit) {
         )
     }
 }
+
+@Composable
+fun BackButton(navigateToPreviousStack: () -> Unit, modifier: Modifier) {
+    Button(
+        onClick = {
+            navigateToPreviousStack()
+        },
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Orange),
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.baseline_arrow_back_ios_new_48),
+            contentDescription = "Back",
+            Modifier.fillMaxSize(0.5f),
+            tint = Color.White,
+        )
+    }
+}

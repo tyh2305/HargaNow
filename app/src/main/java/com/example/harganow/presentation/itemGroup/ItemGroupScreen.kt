@@ -37,8 +37,11 @@ import androidx.compose.ui.unit.sp
 import com.example.harganow.presentation.components.BackButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import com.example.harganow.presentation.components.ProductCardRowBuilder
+import androidx.compose.ui.res.stringResource
+import com.example.harganow.domain.model.convertToItemGroupNameId
+import com.example.harganow.presentation.components.ProductCardMultipleRowBuilder
 import com.example.harganow.presentation.main.CircularProgressBar
+import com.example.harganow.ui.theme.Orange
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
@@ -47,6 +50,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 fun ItemGroupScreen(
     navigateToPreviousStack: () -> Unit,
     navigateToProductDetail: () -> Unit,
+    navigateToCart: () -> Unit,
+    navigateToSearch: () -> Unit,
     itemGroupViewModel:ItemGroupViewModel = ItemGroupViewModel()
 ) {
 //    val itemGroupViewModel = ItemGroupViewModel(itemGroup = itemGroup)
@@ -65,12 +70,13 @@ fun ItemGroupScreen(
         Box(Modifier.verticalScroll(rememberScrollState())) {
             Column() {
 
-                // TODO: Change title, etc
                 ItemGroupScreenHeader(
                     title = itemGroupViewModel.itemGroup,
                     navigateToPreviousStack = navigateToPreviousStack,
                     itemGroupViewModel = itemGroupViewModel,
-                    updateCategory = updateCategory
+                    updateCategory = updateCategory,
+                    navigateToCart,
+                    navigateToSearch
                 )
                 Column() {
                     Spacer(modifier = Modifier.padding(24.dp))
@@ -84,20 +90,10 @@ fun ItemGroupScreen(
                         }
                     }
 
-                    for(i in 0..filteredItemWithPriceList.size step 2) {
-                        val firstItemWithPrice = filteredItemWithPriceList[i]
-                        val secondItemWithPrice = if(i+1 < filteredItemWithPriceList.size) {
-                            filteredItemWithPriceList[i+1]
-                        } else {
-                            null
-                        }
-
-                        ProductCardRowBuilder(
-                            firstItemWithPrice = firstItemWithPrice,
-                            secondItemWithPrice = secondItemWithPrice,
-                            navigateToProductDetail = navigateToProductDetail
-                        )
-                    }
+                    ProductCardMultipleRowBuilder(
+                        itemWithPriceList = filteredItemWithPriceList,
+                        navigateToProductDetail = navigateToProductDetail
+                    )
 
                 }
             }
@@ -111,11 +107,15 @@ fun ItemGroupScreenHeader(
     title: String,
     navigateToPreviousStack: () -> Unit,
     itemGroupViewModel: ItemGroupViewModel,
-    updateCategory: (String) -> Unit
+    updateCategory: (String) -> Unit,
+    navigateToCart: () -> Unit,
+    navigateToSearch: () -> Unit
 ) {
     val itemCategoryList = itemGroupViewModel.itemCategoryList
 
     val state = rememberLazyListState()
+
+    val categoryNameId: Int = convertToItemGroupNameId(title)
 
     Surface(
         elevation = 10.dp
@@ -130,7 +130,7 @@ fun ItemGroupScreenHeader(
                 Row() {
                     BackButton(navigateToPreviousStack = navigateToPreviousStack)
                     Text(
-                        text = title,
+                        text = stringResource(id = categoryNameId),
                         color = Color.Black,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
@@ -138,46 +138,73 @@ fun ItemGroupScreenHeader(
                             .padding(start = 5.dp)
                             .align(Alignment.CenterVertically)
                     )
-                    // TODO: navigate to search
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "",
+                    Spacer(modifier = Modifier.weight(1f))
+                    Box(
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
-                            .size(40.dp)
-                            .padding(start = 15.dp),
-                        tint = Color.Black,
-                    )
-                    // TODO: navigate to cart
-                    Icon(
-                        imageVector = Icons.Default.ShoppingCart,
-                        contentDescription = "",
+                            .padding(end = 15.dp)
+                            .clickable {
+                                navigateToSearch()
+                            }
+                    ){
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(40.dp),
+                            tint = Color.Black,
+                        )
+                    }
+                    Box(
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
-                            .size(40.dp)
-                            .padding(start = 15.dp),
-                        tint = Color.Black,
-                    )
+                            .padding(end = 15.dp)
+                            .clickable {
+                                navigateToCart()
+                            }
+                    ){
+                        Icon(
+                            imageVector = Icons.Default.ShoppingCart,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(40.dp),
+                            tint = Color.Black,
+                        )
+                    }
                 }
+
+                var selectedCategory by remember {
+                    mutableStateOf("")
+                }
+
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(start = 10.dp, end = 10.dp),
                     state = state,
                 ) {
                     items(itemCategoryList) {
-                        // TODO: change color when selected
+                        val color = if (selectedCategory == it) Orange else Color.White
+                        val textColor = if (selectedCategory == it) Color.White else Color.Black
+
                         Box(
                             modifier = Modifier
                                 .clickable {
-                                    updateCategory(it)
+                                    if(selectedCategory == it) {
+                                        selectedCategory = ""
+                                        updateCategory("")
+                                    } else {
+                                        selectedCategory = it
+                                        updateCategory(it)
+                                    }
                                 }
-                                .background(Color.White, RoundedCornerShape(30.dp))
+                                .background(color, RoundedCornerShape(30.dp))
                                 .border(1.dp, Color.Gray, RoundedCornerShape(30.dp))
 
                         ){
                             Text(
                                 text = it,
-                                modifier = Modifier.padding(5.dp)
+                                modifier = Modifier.padding(5.dp),
+                                color = textColor
                             )
                         }
                     }
