@@ -16,6 +16,7 @@ import javax.inject.Singleton
 class ItemRepository {
     val TAG = "ItemRepository"
     val collectionName = "item"
+    private var cachedItems: MutableMap<String, Item> = mutableMapOf()
 
     suspend fun getAllItem(): DataOrException<List<Item>, Exception> {
         val dataOrException = DataOrException<List<Item>, Exception>()
@@ -89,11 +90,20 @@ class ItemRepository {
 
     suspend fun getItemWithId(id: String): DataOrException<Item, Exception> {
         val dataOrException = DataOrException<Item, Exception>()
+        val cachedItem = cachedItems[id]
+        if (cachedItem != null) {
+            dataOrException.data = cachedItem
+            return dataOrException
+        }
         try {
             Log.d(TAG, "Item ${id} is found")
-            var data = DocRef(collectionName, id).get().await().toObject(Item::class.java)
+            var data = DocRef(collectionName, id).get().await()
+                .toObject(Item::class.java)
             Log.d(TAG, "Item ${id} is ${data}")
             dataOrException.data = data
+            if (data != null) {
+                cachedItems[id] = data
+            }
         } catch (e: FirebaseFirestoreException) {
             Log.e(TAG, "Error getting documents: ", e)
             dataOrException.exception = e

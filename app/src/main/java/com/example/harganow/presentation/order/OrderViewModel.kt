@@ -6,11 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.harganow.data.auth.FireAuthRepository
 import com.example.harganow.data.repository.OrderRepository
+import com.example.harganow.data.repository.PriceRepository
+import com.example.harganow.domain.model.ItemPrice
 import com.example.harganow.domain.model.Order
 import kotlinx.coroutines.launch
 
 class OrderViewModel : ViewModel() {
     private val authRepository = FireAuthRepository()
+    private val priceRepository = PriceRepository.itemWithLatestPriceList
     val currentUser = authRepository.getCurrentUser()
     private val orderRepository = OrderRepository()
 
@@ -20,6 +23,15 @@ class OrderViewModel : ViewModel() {
 
     init {
         getData()
+    }
+
+    fun getItemWithId(id: Int?): ItemPrice? {
+        for (item in priceRepository) {
+            if (item.item.id == id.toString()) {
+                return item
+            }
+        }
+        return null
     }
 
     private fun getData() {
