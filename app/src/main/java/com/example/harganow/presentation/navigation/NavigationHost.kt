@@ -234,6 +234,7 @@ fun MyApp() {
                 ProductDetailScreen(
                     navigateToPreviousStack = { navController.popBackStack() },
                     navigateToProductDetail = { navController.navigate("product_detail") },
+                    navigateToCart = { navController.navigate("cart") },
                 )
             }
             composable("search") {

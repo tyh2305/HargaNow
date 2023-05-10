@@ -25,6 +25,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,6 +64,7 @@ fun CircularProgressBar(isDisplayed: Boolean) {
 fun ProductDetailScreen(
     navigateToPreviousStack: () -> Unit,
     navigateToProductDetail: () -> Unit,
+    navigateToCart: () -> Unit,
 ) {
     val itemId = NavInfo.itemId
 
@@ -90,6 +93,24 @@ fun ProductDetailScreen(
                         .size(40.dp)
                         .align(Alignment.TopStart)
                 )
+                Button(
+                    onClick = {
+                        navigateToCart()
+                    },
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.TopEnd),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Orange),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = "Cart",
+                        modifier = Modifier
+                            .fillMaxSize(0.5f),
+                        tint = Color.White,
+                    )
+                }
                 SSLUnsafeImage(
                     context = LocalContext.current,
                     url = retrieveImage(),
@@ -99,6 +120,7 @@ fun ProductDetailScreen(
                 )
                 Button(
                     onClick = {
+                        // TODO: Open Analytics
                         Log.v(tag, "Button Clicked")
                     },
                     modifier = Modifier

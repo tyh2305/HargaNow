@@ -229,10 +229,8 @@ fun HomeScreenHeader(
                                 contentDescription = "Search",
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically),
-//                                    .fillMaxSize(),
                                 tint = Color.Black,
                             )
-                            // TODO: Change text
                             Text(
                                 text = stringResource(id = R.string.search),
                                 modifier = Modifier
