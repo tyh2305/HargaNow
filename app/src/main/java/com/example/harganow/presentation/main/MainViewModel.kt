@@ -26,42 +26,6 @@ class MainViewModel(
 
     var premiseName: String = ""
 
-    val itemGroupNames = listOf(
-        "BARANGAN SEGAR",
-        "MAKANAN SIAP MASAK",
-        "MINUMAN",
-        "BARANGAN KEDAI SERBENEKA",
-        "BARANGAN KERING",
-        "PRODUK KEBERSIHAN",
-        "SUSU DAN BARANGAN BAYI",
-        "BARANGAN BERBUNGKUS"
-    )
-
-    // For Demo Purposes TODO: uncomment commented out items
-    private val itemIds = listOf<String>(
-        "1513", // SUSU DAN BARANGAN BAYI
-        "1514",
-        "2010",
-        "2009",
-        "1904",
-        "1551", // BARANGAN SEGAR
-        "1552",
-        "47",
-        "845",
-        "113",
-        "160", // BARANGAN KERING
-        "129",
-        "1440",
-        "1613", // BARANGAN BERBUNGKUS
-        "1590",
-        "190",
-        "191",
-        "192",
-        "272",
-        "1494",
-        "1976",
-        "1978",
-    )
 
     private fun getData() {
         viewModelScope.launch {
@@ -70,28 +34,38 @@ class MainViewModel(
                 // Have Time get all about 4k items
 
             if(!PriceRepository.itemLoaded){
-                var itemWithPriceDataListDoe: DataOrException<List<ItemPriceData>, Exception>
-                var itemWithPriceDataList: List<ItemPriceData>
-                var itemWithPriceList: List<ItemPrice>
+                var itemWithPriceDataList: List<ItemPriceData> = listOf()
 
-                for(itemId in itemIds){
-                    itemWithPriceDataListDoe = PriceRepository.getLatestPriceWithPremiseAndItem(premiseId,itemId)
-                    if(itemWithPriceDataListDoe.exception == null){
-                        itemWithPriceDataList = itemWithPriceDataListDoe.data!!
+                var itemWithPriceDataListDoe: DataOrException<List<ItemPriceData>, Exception> =
+                    PriceRepository.getLatestPriceWithPremiseWithLimit(premiseId)
 
-                        // Convert ItemPriceData to ItemPrice
-                        itemWithPriceList = itemWithPriceDataList.map { it.toItemPrice(itemRepository, premiseRepository) }
+                if(itemWithPriceDataListDoe.exception == null){
+                    itemWithPriceDataList = itemWithPriceDataListDoe.data!!
+                }
 
-
-                        if(PriceRepository.itemWithLatestPriceList.isEmpty()){
-                            PriceRepository.itemWithLatestPriceList.add(itemWithPriceList[0])
-                        } else if (PriceRepository.itemWithLatestPriceList.last().item.id != itemWithPriceList[0].item.id){
-                            PriceRepository.itemWithLatestPriceList.add(itemWithPriceList[0])
-                        }
-
-                        PriceRepository.itemWithAllPriceMap[itemId] = itemWithPriceList.reversed()
+                val temp: MutableList<ItemPriceData> = mutableListOf()
+                for(itemWithPriceData in itemWithPriceDataList){
+                    if (temp.isEmpty() || temp.none { it.item_code == itemWithPriceData.item_code }){
+                        temp.add(itemWithPriceData)
                     }
                 }
+
+                PriceRepository.itemWithLatestPriceList = temp.map { it.toItemPrice(itemRepository, premiseRepository) } as MutableList<ItemPrice>
+
+                temp.clear()
+                for (itemWithPrice in PriceRepository.itemWithLatestPriceList){
+                    itemWithPriceDataListDoe = PriceRepository.getPriceWithPremiseAndItem(premiseId, itemWithPrice.item.id!!)
+
+                    if(itemWithPriceDataListDoe.exception == null){
+                        itemWithPriceDataList = itemWithPriceDataListDoe.data!!
+                    }
+
+                    if(!PriceRepository.itemWithAllPriceMap.containsKey(itemWithPrice.item.id)){
+                        PriceRepository.itemWithAllPriceMap[itemWithPrice.item.id!!] = itemWithPriceDataList.map { it.toItemPrice(itemRepository, premiseRepository) } as MutableList<ItemPrice>
+                    }
+
+                }
+
                 PriceRepository.itemLoaded = true
             }
 

@@ -47,5 +47,15 @@
     <string name="milk_and_baby_products">Milk and Baby Products</string>
     <string name="cleaning_products">Cleaning Products</string>
     <string name="general_products">General Products</string>
+    <string-array name="itemGroupNameRaw">
+        <item>BARANGAN SEGAR</item>
+        <item>MAKANAN SIAP MASAK</item>
+        <item>MINUMAN</item>
+        <item>BARANGAN KEDAI SERBENEKA</item>
+        <item>BARANGAN KERING</item>
+        <item>PRODUK KEBERSIHAN</item>
+        <item>SUSU DAN BARANGAN BAYI</item>
+        <item>BARANGAN BERBUNGKUS</item>
+    </string-array>
 </resources>
 

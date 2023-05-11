@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -222,8 +223,7 @@ fun HomeScreenHeader(
                                 navigateToSearch()
                             }
                     ){
-                        Row(
-                        ){
+                        Row {
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_search_24),
                                 contentDescription = "Search",
@@ -263,8 +263,10 @@ fun ContentList(
 
         val itemGroupItemWithPriceMap = LinkedHashMap<String, List<ItemPrice>>()
 
-        for (i in mainViewModel.itemGroupNames.indices){
-            itemGroupItemWithPriceMap[mainViewModel.itemGroupNames[i]] = PriceRepository.itemWithLatestPriceList.filter { it.item.item_group == mainViewModel.itemGroupNames[i] }
+        val itemGroupNamesRaw = stringArrayResource(id = R.array.itemGroupNameRaw)
+
+        for (i in itemGroupNamesRaw.indices){
+            itemGroupItemWithPriceMap[itemGroupNamesRaw[i]] = PriceRepository.itemWithLatestPriceList.filter { it.item.item_group == itemGroupNamesRaw[i] }
         }
 
         //Remove empty list from itemGroupItemWithPriceMap
@@ -291,16 +293,12 @@ fun Categories(
 
     )
     {
-        Row(
-
-        ) {
+        Row{
             CategoryCircle(1458, "BARANGAN SEGAR", navigateToItemGroupScreen)
             CategoryCircle(129, "BARANGAN KERING", navigateToItemGroupScreen)
             CategoryCircle(272, "BARANGAN BERBUNGKUS", navigateToItemGroupScreen)
         }
-        Row(
-        )
-        {
+        Row {
             CategoryCircle(226, "MINUMAN", navigateToItemGroupScreen)
             CategoryCircle(1970, "SUSU DAN BARANGAN BAYI", navigateToItemGroupScreen)
             CategoryCircle(1980, "PRODUK KEBERSIHAN", navigateToItemGroupScreen)
@@ -490,8 +488,6 @@ fun LocationDialog(
 fun StateExposedDropdownMenuBox(
 ){
     val context = LocalContext.current
-//    var stateSelected: String
-    // TODO: filter district by state
 
     val locationArray:Array<String> = context.resources.getStringArray(R.array.stateNames)
 
@@ -555,7 +551,6 @@ fun StateExposedDropdownMenuBox(
 fun DistrictExposedDropdownMenuBox(
 ){
     val context = LocalContext.current
-    // TODO: filter district by state
 
     val locationArray:Array<String> = context.resources.getStringArray(R.array.W_P_KualaLumpurDistrictNames)
 

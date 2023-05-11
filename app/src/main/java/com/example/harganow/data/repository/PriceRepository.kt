@@ -13,7 +13,7 @@ object PriceRepository {
     val TAG = "PriceRepository"
     val collectionName = "price"
     var itemWithLatestPriceList: MutableList<ItemPrice> = mutableListOf()
-    var itemWithAllPriceMap: MutableMap<String, List<ItemPrice>> = mutableMapOf()
+    var itemWithAllPriceMap: MutableMap<String, MutableList<ItemPrice>> = mutableMapOf()
     var itemLoaded = false
     var i = 0
 
@@ -40,7 +40,7 @@ object PriceRepository {
                 Firestore.ColRefFilter(collectionName, "premise_code", premiseId)
                     .whereGreaterThan("date", "1970-01-01")
                     .orderBy("date", Query.Direction.DESCENDING)
-                    .limit(10).get().await() //TODO: Change limit to higher number
+                    .limit(50).get().await()
                     .map { document ->
                         document.toObject(ItemPriceData::class.java)
                     }
@@ -77,7 +77,7 @@ object PriceRepository {
                     .whereEqualTo("item_code", itemId)
                     .whereGreaterThan("date", "1970-01-01")
                     .orderBy("date")
-                    .limit(10).get().await() // Alter limit if more date is needed
+                    .limit(15).get().await() // Alter limit if more date is needed
                     .map { document ->
                         document.toObject(ItemPriceData::class.java)
                     }

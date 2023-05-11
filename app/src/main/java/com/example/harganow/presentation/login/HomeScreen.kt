@@ -57,7 +57,7 @@ fun HomeScreen(
                 .padding(vertical = 8.dp),
             colors = ButtonDefaults.buttonColors(backgroundColor = Orange)
         ) {
-            Text(text = "Login In", color = Color.White)
+            Text(text = "Log In", color = Color.White)
         }
 
         Button(
