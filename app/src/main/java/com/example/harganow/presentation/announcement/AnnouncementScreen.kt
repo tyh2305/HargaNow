@@ -21,19 +21,18 @@ import com.example.harganow.presentation.components.Header
 import com.example.harganow.ui.theme.Orange
 
 @Composable
-fun AnnouncementCard(title:String?, description:String?, onClick: () -> Unit)
-{
+fun AnnouncementCard(title: String?, description: String?, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .clickable { onClick() }
             .fillMaxWidth()
             .background(Color.White)
     ) {
-        Column(){
+        Column() {
             Row(
                 modifier = Modifier
                     .padding(vertical = 16.dp)
-            ){
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.campaign_black_24dp),
                     contentDescription = "Announcement Icon",
@@ -47,7 +46,8 @@ fun AnnouncementCard(title:String?, description:String?, onClick: () -> Unit)
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                 ) {
-                    Text(text = title?:"",
+                    Text(
+                        text = title ?: "",
                         color = Orange,
                         fontWeight = FontWeight.Bold,
                     )
@@ -55,14 +55,16 @@ fun AnnouncementCard(title:String?, description:String?, onClick: () -> Unit)
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = description?:"",
+                        text = description ?: "",
                     )
                 }
             }
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(2.dp)
-                .background(Color.Black.copy(alpha = 0.2f)))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(Color.Black.copy(alpha = 0.2f))
+            )
         }
     }
 }
@@ -93,7 +95,8 @@ fun AnnouncementScreen(
         Header(
             title = "Announcement",
             titleSize = 64,
-            navigateToPreviousStack = navigateToPreviousStack
+            navigateToPreviousStack = navigateToPreviousStack,
+            false
         )
 
         // TODO: Take data from database and create announcement card for each data
@@ -147,10 +150,11 @@ fun AnnouncementScreen(
         }
     }
 }
+
 @Preview
 @Composable
 fun AnnouncementScreenPreview() {
     AnnouncementScreen(
-        navigateToPreviousStack = {  }
+        navigateToPreviousStack = { }
     )
 }

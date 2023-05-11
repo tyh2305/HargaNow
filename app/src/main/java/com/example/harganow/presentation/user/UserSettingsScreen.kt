@@ -24,7 +24,7 @@ import com.example.harganow.ui.theme.Orange
 import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsCard(title: String, cardHeight:Int, iconID:Int, onClick: () -> Unit) {
+fun SettingsCard(title: String, cardHeight: Int, iconID: Int, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .clickable { onClick() }
@@ -45,10 +45,12 @@ fun SettingsCard(title: String, cardHeight:Int, iconID:Int, onClick: () -> Unit)
                     fontSize = 16.sp,
                 )
             }
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(2.dp)
-                .background(Color.Black.copy(alpha = 0.2f)))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(Color.Black.copy(alpha = 0.2f))
+            )
         }
     }
 }
@@ -66,10 +68,9 @@ fun UserSettingsScreen(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    fun CallLogout()
-    {
+    fun CallLogout() {
         coroutineScope.launch {
-            authViewModel.logout(){ result ->
+            authViewModel.logout() { result ->
                 when (result) {
                     is Result.Success -> {
                         // Handle successful registration
@@ -94,25 +95,37 @@ fun UserSettingsScreen(
             .background(Color.White)
     ) {
 
-        Header(title = "User Settings", titleSize = 64, navigateToPreviousStack = navigateToPreviousStack)
-        SettingsCard(title = "Manage Account", 60,
-            R.drawable.manage_accounts_black_24dp,  onClick = navigateToManageAccount)
-        SettingsCard(title = "Edit Address",60,
-            R.drawable.location_on_black_24dp, onClick = navigateToAddress)
-        SettingsCard(title = "Bank Accounts / Cards", 60,
-            R.drawable.account_balance_wallet_black_24dp, onClick = navigateToBankAccount)
-        SettingsCard(title = "Policy", 60,
-            R.drawable.policy_black_24dp, onClick = navigateToPolicy)
+        Header(
+            title = "User Settings",
+            titleSize = 64,
+            navigateToPreviousStack = navigateToPreviousStack,
+            false
+        )
+        SettingsCard(
+            title = "Manage Account", 60,
+            R.drawable.manage_accounts_black_24dp, onClick = navigateToManageAccount
+        )
+        SettingsCard(
+            title = "Edit Address", 60,
+            R.drawable.location_on_black_24dp, onClick = navigateToAddress
+        )
+        SettingsCard(
+            title = "Bank Accounts / Cards", 60,
+            R.drawable.account_balance_wallet_black_24dp, onClick = navigateToBankAccount
+        )
+        SettingsCard(
+            title = "Policy", 60,
+            R.drawable.policy_black_24dp, onClick = navigateToPolicy
+        )
         SettingsCard(title = "Logout", 60,
-            R.drawable.logout_black_24dp, onClick = {CallLogout()})
+            R.drawable.logout_black_24dp, onClick = { CallLogout() })
     }
 }
 
 
 @Preview
 @Composable
-fun UserSettingsScreenPreview()
-{
+fun UserSettingsScreenPreview() {
     UserSettingsScreen(
         navigateToPreviousStack = {},
         navigateToManageAccount = {},

@@ -15,14 +15,20 @@ import androidx.compose.ui.unit.dp
 @Preview(
     showBackground = true,
     widthDp = 360,
-    heightDp = 800)
+    heightDp = 800
+)
 @Composable
 fun HeaderPreview() {
     Header(title = "Reset Password", titleSize = 64, navigateToPreviousStack = {})
 }
 
 @Composable
-fun Header(title: String, titleSize: Int, navigateToPreviousStack: () -> Unit) {
+fun Header(
+    title: String,
+    titleSize: Int,
+    navigateToPreviousStack: () -> Unit,
+    displayBack: Boolean = true
+) {
     Column() {
         TopAppBar(
             modifier = Modifier
@@ -34,14 +40,16 @@ fun Header(title: String, titleSize: Int, navigateToPreviousStack: () -> Unit) {
                     modifier = Modifier.padding(horizontal = titleSize.dp),
                     textAlign = TextAlign.Center,
                 )
-            } ,
+            },
             navigationIcon = {
-                BackButton(navigateToPreviousStack = navigateToPreviousStack)
+                if (displayBack) BackButton(navigateToPreviousStack = navigateToPreviousStack)
             },
         )
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(2.dp)
-            .background(Color.Black.copy(alpha = 0.2f)))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(2.dp)
+                .background(Color.Black.copy(alpha = 0.2f))
+        )
     }
 }

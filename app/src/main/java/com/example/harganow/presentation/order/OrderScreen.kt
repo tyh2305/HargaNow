@@ -123,7 +123,8 @@ fun OrderScreen(
             Header(
                 title = "Order",
                 titleSize = 10,
-                navigateToPreviousStack = navigateToPreviousStack
+                navigateToPreviousStack = navigateToPreviousStack,
+                displayBack = false
             )
             CircularProgressBar(
                 isDisplayed = orderViewModel.loading.value
