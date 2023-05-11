@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.harganow.R
 import com.example.harganow.presentation.components.ProductCardLazyRowBuilder
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -49,14 +50,93 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import com.example.harganow.domain.model.ItemPrice
 import com.example.harganow.ui.theme.Orange
 import com.example.harganow.utils.NavInfo
 
 @ExperimentalCoroutinesApi
 @Composable
 fun CircularProgressBar(isDisplayed: Boolean) {
-    if(isDisplayed) {
+    if (isDisplayed) {
         CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun AnalyticsDialog(
+    itemList: Array<ItemPrice>,
+    openDialogUpdate: () -> Unit,
+) {
+    var total = 0.0
+    for (itemPrice in itemList) {
+        total += itemPrice.price
+    }
+    val average = total / itemList.size
+    val max = itemList.maxByOrNull { it.price }
+    val min = itemList.minByOrNull { it.price }
+
+    Dialog(
+        onDismissRequest = {
+        }
+
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.White, RoundedCornerShape(10.dp))
+        ) {
+            Column {
+                Text("Price Analytics")
+                for (itemPrice in itemList) {
+                    Text(
+                        text = itemPrice.price.toString(),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(8.dp)
+                    )
+                }
+                Row {
+                    Text("Average")
+                    Text(
+                        text = average.toString(),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(8.dp)
+                    )
+                }
+                Row {
+                    Text("Max")
+                    Text(
+                        text = max?.price.toString(),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(8.dp)
+                    )
+                }
+                Row {
+                    Text("Min")
+                    Text(
+                        text = min?.price.toString(),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .padding(8.dp)
+                    )
+                }
+                Button(
+                    onClick = {
+                        openDialogUpdate()
+                    },
+                    modifier = Modifier
+                        .padding(8.dp)
+                ) {
+                    Text(text = stringResource(id = R.string.cancel))
+                }
+            }
+        }
     }
 }
 
@@ -70,13 +150,24 @@ fun ProductDetailScreen(
 
     val tag = "ProductDetailScreen"
     val productDetailViewModel = ProductDetailViewModel(itemId = itemId)
-
     var quantity by remember { mutableStateOf(1) }
+    var openDialog by rememberSaveable { mutableStateOf(false) }
 
     fun retrieveImage(): String {
         val imageUrl = ImageGetter.GetImage(itemId)
-        Log.v(tag,"ImageUrl : $imageUrl")
+        Log.v(tag, "ImageUrl : $imageUrl")
         return imageUrl
+    }
+
+    val openDialogUpdate = {
+        openDialog = false
+    }
+
+    if (openDialog) {
+        AnalyticsDialog(
+            itemList = productDetailViewModel.priceList,
+            openDialogUpdate = openDialogUpdate
+        )
     }
 
     Column {
@@ -121,6 +212,7 @@ fun ProductDetailScreen(
                 Button(
                     onClick = {
                         // TODO: Open Analytics
+                        openDialog = true;
                         Log.v(tag, "Button Clicked")
                     },
                     modifier = Modifier
@@ -173,9 +265,10 @@ fun ProductDetailScreen(
         // Observe loading of view model, if loading finish then show the text
         if (!productDetailViewModel.loading.value) {
 
-            Spacer(modifier = Modifier
-                .padding(16.dp)
-                .background(Color.LightGray)
+            Spacer(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .background(Color.LightGray)
             )
 
             Box(
@@ -236,7 +329,7 @@ fun ProductDetailScreen(
                         )
                         .padding(start = 25.dp, end = 25.dp, top = 5.dp)
                         .align(Alignment.CenterVertically),
-                ){
+                ) {
                     Text(
                         text = quantity.toString(),
                         fontSize = 20.sp,

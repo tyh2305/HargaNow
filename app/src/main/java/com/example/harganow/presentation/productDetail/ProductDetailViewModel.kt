@@ -11,11 +11,10 @@ import com.example.harganow.domain.model.ItemPrice
 import kotlinx.coroutines.launch
 
 
-
 class ProductDetailViewModel(
     itemId: String,
 
-): ViewModel() {
+    ) : ViewModel() {
     val tag = "ProductDetailViewModel"
     var loading = mutableStateOf(false)
 
@@ -25,36 +24,40 @@ class ProductDetailViewModel(
 
     var alternativeItemWithPriceList: List<ItemPrice> = listOf()
 
-    var itemWithPrice:ItemPrice = ItemPrice()
+    var itemWithPrice: ItemPrice = ItemPrice()
+    var priceList: Array<ItemPrice> = arrayOf()
 
-    init{
+    init {
         getData()
     }
 
-    private fun getData(){
-        viewModelScope.launch{
+    private fun getData() {
+        viewModelScope.launch {
             loading.value = true
 
 
-            for(item in PriceRepository.itemWithLatestPriceList){
-                if(item.item.id == itemId){
+            for (item in PriceRepository.itemWithLatestPriceList) {
+                if (item.item.id == itemId) {
                     itemWithPrice = item
                     break
                 }
             }
 
-            for(item in PriceRepository.itemWithLatestPriceList){
-                if(item.item.item_category == itemWithPrice.item.item_category && item.item.id != itemWithPrice.item.id){
+            for (item in PriceRepository.itemWithLatestPriceList) {
+                if (item.item.item_category == itemWithPrice.item.item_category && item.item.id != itemWithPrice.item.id) {
                     alternativeItemWithPriceList += item
                 }
             }
 
+            for (item in PriceRepository.itemWithAllPriceMap[itemId]!!) {
+                priceList += item
+            }
             loading.value = false
         }
     }
 
-    fun handleAddToCart(quantity: Int){
-        viewModelScope.launch{
+    fun handleAddToCart(quantity: Int) {
+        viewModelScope.launch {
 
             val cartItem = CartItem(itemWithPrice.item.id!!.toInt(), quantity)
 
