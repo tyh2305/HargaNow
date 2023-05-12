@@ -1,33 +1,17 @@
 package com.example.harganow.presentation.cart
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import ItemRepository
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.viewModelScope
 import com.example.harganow.data.repository.CartRepository
-import com.example.harganow.data.repository.UserRepository
-import com.example.harganow.domain.model.DataOrException
-import com.example.harganow.domain.model.Item
-import com.example.harganow.domain.model.ItemDate
+import com.example.harganow.data.repository.PremiseRepository
 import com.example.harganow.domain.model.ItemPrice
-import com.example.harganow.domain.model.Place
-import com.example.harganow.domain.model.Premise
-import com.example.harganow.domain.model.State
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class CartViewModel(chosenList: MutableList<Map<ItemPrice, Int>>) : ViewModel() {
-    private val itemRepository: ItemRepository = ItemRepository()
-    private val userRepository: UserRepository = UserRepository()
     private val cartRepository: CartRepository = CartRepository()
+    private val premiseRepository: PremiseRepository = PremiseRepository()
 
     //    val cartItemIdList: List<Int>? = userRepository.getUserCartItem()
 //    val cartItemList: ArrayList<Item> = ArrayList<Item>()
@@ -36,7 +20,8 @@ class CartViewModel(chosenList: MutableList<Map<ItemPrice, Int>>) : ViewModel() 
     var chosenList: MutableList<Map<ItemPrice, Int>> = chosenList
 
     var loading = mutableStateOf(false)
-    val premiseId: String = "18098"
+    val premiseId: String = premiseRepository.premiseId.value
+    var hasData = mutableStateOf(true)
     var data: MutableList<Map<ItemPrice, Int>> = mutableListOf()
     var price: Double = 0.0
 
@@ -47,7 +32,14 @@ class CartViewModel(chosenList: MutableList<Map<ItemPrice, Int>>) : ViewModel() 
     private fun getData() {
         viewModelScope.launch {
             loading.value = true
-            data = cartRepository.getCartData(premiseId)
+            try {
+                data = cartRepository.getCartData(premiseId)
+            } catch (e: Exception) {
+                hasData.value = false
+                loading.value = false
+                Log.d(TAG, "getData: $e")
+                return@launch
+            }
             getPrice()
             loading.value = false
         }
@@ -63,4 +55,19 @@ class CartViewModel(chosenList: MutableList<Map<ItemPrice, Int>>) : ViewModel() 
         price = totalPrice
     }
 
+
+    fun removeFromCart() {
+        viewModelScope.launch {
+            loading.value = true
+            try {
+                cartRepository.removeFromCart(premiseId, chosenList)
+            } catch (e: Exception) {
+                Log.d(TAG, "removeFromCart: $e")
+                loading.value = false
+                return@launch
+            }
+            Log.d(TAG , "removeFromCart: success")
+            loading.value = false
+        }
+    }
 }

@@ -145,7 +145,12 @@ fun MyApp() {
                     navigateToPreviousStack = { navController.popBackStack() },
                     navigateToRegister = { navController.navigate("register") },
                     // TODO: Change this to navigate to the main screen
-                    navigateToMain = { navController.navigate("main") },
+                    navigateToMain = {
+                        navController.apply {
+                            popBackStack()
+                            navigate("main")
+                        }
+                    },
                 )
             }
             composable("register") {

@@ -54,6 +54,12 @@ import androidx.compose.ui.window.Dialog
 import com.example.harganow.domain.model.ItemPrice
 import com.example.harganow.ui.theme.Orange
 import com.example.harganow.utils.NavInfo
+import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
+import com.patrykandpatrick.vico.compose.chart.Chart
+import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.core.entry.FloatEntry
+import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @ExperimentalCoroutinesApi
 @Composable
@@ -69,13 +75,15 @@ fun AnalyticsDialog(
     openDialogUpdate: () -> Unit,
 ) {
     var total = 0.0
+    var priceList: List<FloatEntry> = listOf()
     for (itemPrice in itemList) {
         total += itemPrice.price
+        priceList.plus(FloatEntry(x = itemPrice.date.day.toFloat(), y = itemPrice.price.toFloat()))
     }
     val average = total / itemList.size
     val max = itemList.maxByOrNull { it.price }
     val min = itemList.minByOrNull { it.price }
-
+    val chartEntryModel = entryModelOf(priceList)
     Dialog(
         onDismissRequest = {
         }
@@ -96,6 +104,12 @@ fun AnalyticsDialog(
                             .padding(8.dp)
                     )
                 }
+                Chart(
+                    chart = lineChart(),
+                    model = chartEntryModel,
+                    startAxis = startAxis(),
+                    bottomAxis = bottomAxis(),
+                )
                 Row {
                     Text("Average")
                     Text(

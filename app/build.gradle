@@ -126,6 +126,10 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     kapt 'com.google.dagger:hilt-android-compiler:2.44'
 
+    // Vico
+    implementation "com.patrykandpatrick.vico:core:1.6.5"
+    implementation "com.patrykandpatrick.vico:compose:1.6.5"
+
 }
 
 kapt {

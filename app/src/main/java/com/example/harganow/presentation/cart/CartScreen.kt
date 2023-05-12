@@ -54,6 +54,7 @@ fun CartScreen(
         chosenList.forEach { item ->
             Log.d("Chosen Item List", item.toString())
         }
+        cartViewModel.removeFromCart()
         navigateToCheckout()
     }
 
@@ -72,7 +73,7 @@ fun CartScreen(
             CircularProgressBar(
                 isDisplayed = cartViewModel.loading.value
             )
-            if (!cartViewModel.loading.value) {
+            if (!cartViewModel.loading.value && cartViewModel.hasData.value) {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.SpaceBetween,
@@ -96,6 +97,24 @@ fun CartScreen(
                         ) {
                             Text(text = "Checkout")
                         }
+                    }
+                }
+            } else if (!cartViewModel.loading.value && !cartViewModel.hasData.value) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .wrapContentHeight(align = Alignment.CenterVertically),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "No items in cart")
+                    Button(
+                        onClick = { navigateToPreviousStack() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 0.dp, horizontal = 20.dp)
+                    ) {
+                        Text(text = "Go Shopping")
                     }
                 }
             }

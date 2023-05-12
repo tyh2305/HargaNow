@@ -64,7 +64,11 @@ class ProductDetailViewModel(
             Log.v(tag, "cartItem: $cartItem")
 
             // TODO: enable this when addToCart is usable
-            //cartRepository.addToCart(itemWithPrice.premise.id, cartItem)
+            try {
+                cartRepository.addToCart(itemWithPrice.premise.id, cartItem)
+            } catch (e: Exception) {
+                Log.e(tag, e.toString())
+            }
         }
     }
 

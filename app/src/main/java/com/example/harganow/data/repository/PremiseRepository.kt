@@ -1,17 +1,21 @@
 package com.example.harganow.data.repository
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import com.example.harganow.data.source.Firestore
 import com.example.harganow.domain.model.DataOrException
 import com.example.harganow.domain.model.Premise
 import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
+import javax.inject.Singleton
 
+@Singleton
 class PremiseRepository {
+    var premiseId = mutableStateOf("18098")
     val TAG = "PremiseRepository"
     val collectionName = "premise"
 
-    companion object{
+    companion object {
         var i = 0
     }
 
