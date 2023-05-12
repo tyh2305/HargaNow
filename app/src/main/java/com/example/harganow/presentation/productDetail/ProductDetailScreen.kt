@@ -76,13 +76,15 @@ fun AnalyticsDialog(
     itemList: Array<ItemPrice>,
     openDialogUpdate: () -> Unit,
 ) {
-    var total = 0.0
-    var priceList: List<FloatEntry> = listOf()
-    for (itemPrice in itemList) {
-        total += itemPrice.price
-        priceList.plus(FloatEntry(x = itemPrice.date.day.toFloat(), y = itemPrice.price.toFloat()))
+    val prices = itemList.map { it.price }.reversed()
+    val priceList = prices.mapIndexed { index, price ->
+        FloatEntry(x = index.toFloat(), y = price.toFloat())
     }
-    val average = total / itemList.size
+
+    // Average of the prices
+    val average = prices.average()
+    // Format the average as a string with two decimal places
+    val averageString = String.format("%.2f", average)
     val max = itemList.maxByOrNull { it.price }
     val min = itemList.minByOrNull { it.price }
     val chartEntryModel = entryModelOf(priceList)
@@ -94,18 +96,12 @@ fun AnalyticsDialog(
         Box(
             modifier = Modifier
                 .background(Color.White, RoundedCornerShape(10.dp))
+                .width(600.dp)
         ) {
             Column {
-                Text("Price Analytics")
-                for (itemPrice in itemList) {
-                    Text(
-                        text = itemPrice.price.toString(),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .padding(8.dp)
-                    )
-                }
+                Text("Price Analytics",
+                    modifier = Modifier
+                    .padding(12.dp))
                 Chart(
                     chart = lineChart(),
                     model = chartEntryModel,
@@ -113,9 +109,11 @@ fun AnalyticsDialog(
                     bottomAxis = bottomAxis(),
                 )
                 Row {
-                    Text("Average")
+                    Text("Average",
+                        modifier = Modifier
+                        .padding(12.dp))
                     Text(
-                        text = average.toString(),
+                        text = averageString,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -123,7 +121,9 @@ fun AnalyticsDialog(
                     )
                 }
                 Row {
-                    Text("Max")
+                    Text("Max",
+                        modifier = Modifier
+                            .padding(12.dp))
                     Text(
                         text = max?.price.toString(),
                         fontSize = 20.sp,
@@ -133,7 +133,9 @@ fun AnalyticsDialog(
                     )
                 }
                 Row {
-                    Text("Min")
+                    Text("Min",
+                        modifier = Modifier
+                            .padding(12.dp))
                     Text(
                         text = min?.price.toString(),
                         fontSize = 20.sp,
@@ -147,7 +149,9 @@ fun AnalyticsDialog(
                         openDialogUpdate()
                     },
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(10.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.End)
                 ) {
                     Text(text = stringResource(id = R.string.cancel))
                 }
