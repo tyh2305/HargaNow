@@ -13,7 +13,7 @@ import com.example.harganow.domain.model.Premise
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val loadingFinUpdate: () -> Unit
+    private val loadingFinUpdate: (Boolean) -> Unit
 ) : ViewModel() {
 
     private val itemRepository: ItemRepository = ItemRepository()
@@ -25,6 +25,7 @@ class MainViewModel(
     private lateinit var premiseId: String
 
     var premiseName: String = ""
+    var tempPremiseName: String = ""
 
 
     private fun getData() {
@@ -71,7 +72,7 @@ class MainViewModel(
 
             loading.value = false
             if(!loading.value){
-                loadingFinUpdate()
+                loadingFinUpdate(true)
             }
         }
     }
@@ -82,7 +83,13 @@ class MainViewModel(
         }
 
         viewModelScope.launch {
+            if(tempPremiseName == premiseName){
+                return@launch
+            }
             loading.value = true
+            if(loading.value){
+               loadingFinUpdate(false)
+            }
 
             val premiseDataDoe = premiseRepository.getPremiseWithName(premiseName)
             var premiseList = listOf<Premise>()
@@ -93,10 +100,16 @@ class MainViewModel(
 
             premiseId = premiseList[0].id
             premiseName = premiseList[0].premise
+            tempPremiseName = premiseName
+            PriceRepository.itemLoaded = false
+            PriceRepository.itemWithLatestPriceList.clear()
+            PriceRepository.itemWithAllPriceMap.clear()
+
 
             getData()
 
             loading.value = false
+
         }
     }
 

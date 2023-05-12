@@ -10,8 +10,8 @@ import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
 object PriceRepository {
-    val TAG = "PriceRepository"
-    val collectionName = "price"
+    const val tag = "PriceRepository"
+    private const val collectionName = "price"
     var itemWithLatestPriceList: MutableList<ItemPrice> = mutableListOf()
     var itemWithAllPriceMap: MutableMap<String, MutableList<ItemPrice>> = mutableMapOf()
     var itemLoaded = false
@@ -27,7 +27,7 @@ object PriceRepository {
                         document.toObject(ItemPriceData::class.java)
                     }
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, "Error getting documents: ", e)
+            Log.e(tag, "Error getting documents: ", e)
             dataOrException.exception = e
         }
         return dataOrException
@@ -45,7 +45,7 @@ object PriceRepository {
                         document.toObject(ItemPriceData::class.java)
                     }
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, "Error getting documents: ", e)
+            Log.e(tag, "Error getting documents: ", e)
             dataOrException.exception = e
         }
         return dataOrException
@@ -60,7 +60,7 @@ object PriceRepository {
                         document.toObject(ItemPriceData::class.java)
                     }
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, "Error getting documents: ", e)
+            Log.e(tag, "Error getting documents: ", e)
             dataOrException.exception = e
         }
         return dataOrException
@@ -85,11 +85,11 @@ object PriceRepository {
                 throw FirebaseFirestoreException("No data found", FirebaseFirestoreException.Code.NOT_FOUND)
             }
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, "Error getting documents: ", e)
+            Log.e(tag, "Error getting documents: ", e)
             dataOrException.exception = e
         }
         i++
-        Log.d(TAG, "getLatestPriceWithPremiseAndItem: $i")
+        Log.d(tag, "getLatestPriceWithPremiseAndItem: $i")
         return dataOrException
     }
 
@@ -112,11 +112,11 @@ object PriceRepository {
                 throw FirebaseFirestoreException("No data found", FirebaseFirestoreException.Code.NOT_FOUND)
             }
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, "Error getting documents: ", e)
+            Log.e(tag, "Error getting documents: ", e)
             dataOrException.exception = e
         }
         i++
-        Log.d(TAG, "getLatestPriceWithPremiseAndItem: $i")
+        Log.d(tag, "getLatestPriceWithPremiseAndItem: $i")
         return dataOrException
     }
 
@@ -134,7 +134,7 @@ object PriceRepository {
                         document.toObject(ItemPriceData::class.java)
                     }
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, "Error getting documents: ", e)
+            Log.e(tag, "Error getting documents: ", e)
             dataOrException.exception = e
         }
         return dataOrException
@@ -156,7 +156,7 @@ object PriceRepository {
             }
             dataOrException.data = totalPrice
         } catch (e: FirebaseFirestoreException) {
-            Log.e(TAG, "Error getting documents: ", e)
+            Log.e(tag, "Error getting documents: ", e)
             dataOrException.exception = e
         }
         return dataOrException

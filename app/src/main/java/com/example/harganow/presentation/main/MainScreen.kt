@@ -80,8 +80,8 @@ fun MainScreen(
         openDialog = false
     }
 
-    val loadingFinUpdate = {
-        loadingFin = true
+    val loadingFinUpdate = { it:Boolean ->
+        loadingFin = it
     }
 
     val mainViewModel = MainViewModel(loadingFinUpdate)
@@ -286,7 +286,7 @@ fun ContentList(
 fun Categories(
     navigateToItemGroupScreen: () -> Unit,
 ){
-    Column( //Align content to the center
+    Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
