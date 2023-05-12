@@ -308,12 +308,6 @@ fun ProductDetailScreen(
                 }
             }
 
-            Box(
-                modifier = Modifier
-                    .height(16.dp)
-                    .background(color = Color.LightGray)
-            )
-
             Row(
                 modifier = Modifier
                     .padding(start = 8.dp, end = 8.dp)
@@ -325,7 +319,7 @@ fun ProductDetailScreen(
                         Log.v(tag, "Button Clicked")
                     },
                     enabled = quantity > 1,
-                    border = BorderStroke(1.dp, Color.Black),
+                    border = BorderStroke(1.dp, Orange),
                     shape = RoundedCornerShape(0)
 
                 ) {
@@ -341,7 +335,7 @@ fun ProductDetailScreen(
                         .height(40.dp)
                         .border(
                             width = 1.dp,
-                            color = Color.Black,
+                            color = Orange,
                         )
                         .padding(start = 25.dp, end = 25.dp, top = 5.dp)
                         .align(Alignment.CenterVertically),
@@ -357,7 +351,7 @@ fun ProductDetailScreen(
                         quantity++
                         Log.v(tag, "Button Clicked")
                     },
-                    border = BorderStroke(1.dp, Color.Black),
+                    border = BorderStroke(1.dp, Orange),
                     shape = RoundedCornerShape(0)
                 ) {
                     Icon(

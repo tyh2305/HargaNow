@@ -131,7 +131,7 @@ fun ProductCardLazyRowBuilder(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = 16.dp, bottom = 16.dp)
         ){
             Spacer(modifier = Modifier.weight(1f))
             Text(
@@ -171,7 +171,7 @@ fun ProductCardMultipleRowBuilder(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = 16.dp, bottom = 16.dp)
         ){
             Spacer(modifier = Modifier.weight(1f))
             Text(
