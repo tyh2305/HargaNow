@@ -52,10 +52,10 @@ class MainViewModel(
 
                 temp.clear()
                 for (itemWithPrice in PriceRepository.itemWithLatestPriceList){
-                    itemWithPriceDataListDoe = PriceRepository.getPriceWithPremiseAndItem(premiseId, itemWithPrice.item.id!!)
+                    itemWithPriceDataListDoe = PriceRepository.getLatestPriceWithPremiseAndItem(premiseId, itemWithPrice.item.id!!)
 
                     if(itemWithPriceDataListDoe.exception == null){
-                        itemWithPriceDataList = itemWithPriceDataListDoe.data!!
+                        itemWithPriceDataList = itemWithPriceDataListDoe.data!!.reversed()
                     }
 
                     if(!PriceRepository.itemWithAllPriceMap.containsKey(itemWithPrice.item.id)){
