@@ -249,6 +249,11 @@ fun MyApp() {
                     navigateToCart = { navController.navigate("cart") },
                 )
             }
+            composable("address") {
+                AddressScreen {
+
+                }
+            }
         }
     }
 }
