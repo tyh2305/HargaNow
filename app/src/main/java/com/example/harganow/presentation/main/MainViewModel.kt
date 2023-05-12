@@ -27,12 +27,9 @@ class MainViewModel(
     var premiseName: String = ""
     var tempPremiseName: String = ""
 
-
     private fun getData() {
         viewModelScope.launch {
             loading.value = true
-
-                // Have Time get all about 4k items
 
             if(!PriceRepository.itemLoaded){
                 var itemWithPriceDataList: List<ItemPriceData> = listOf()
@@ -112,5 +109,4 @@ class MainViewModel(
 
         }
     }
-
 }
