@@ -3,6 +3,7 @@
 package com.example.harganow.presentation.productDetail
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -89,9 +90,11 @@ fun AnalyticsDialog(
                 .width(600.dp)
         ) {
             Column {
-                Text("Price Analytics",
+                Text(
+                    "Price Analytics",
                     modifier = Modifier
-                    .padding(12.dp))
+                        .padding(12.dp)
+                )
                 Chart(
                     chart = lineChart(),
                     model = chartEntryModel,
@@ -99,9 +102,11 @@ fun AnalyticsDialog(
                     bottomAxis = bottomAxis(),
                 )
                 Row {
-                    Text("Average",
+                    Text(
+                        "Average",
                         modifier = Modifier
-                        .padding(12.dp))
+                            .padding(12.dp)
+                    )
                     Text(
                         text = averageString,
                         fontSize = 20.sp,
@@ -111,9 +116,11 @@ fun AnalyticsDialog(
                     )
                 }
                 Row {
-                    Text("Max",
+                    Text(
+                        "Max",
                         modifier = Modifier
-                            .padding(12.dp))
+                            .padding(12.dp)
+                    )
                     Text(
                         text = max?.price.toString(),
                         fontSize = 20.sp,
@@ -123,9 +130,11 @@ fun AnalyticsDialog(
                     )
                 }
                 Row {
-                    Text("Min",
+                    Text(
+                        "Min",
                         modifier = Modifier
-                            .padding(12.dp))
+                            .padding(12.dp)
+                    )
                     Text(
                         text = min?.price.toString(),
                         fontSize = 20.sp,
@@ -159,6 +168,7 @@ fun ProductDetailScreen(
     val itemId = NavInfo.itemId
 
     val tag = "ProductDetailScreen"
+    val context = LocalContext.current
     val productDetailViewModel = ProductDetailViewModel(itemId = itemId)
     var quantity by remember { mutableStateOf(1) }
     var openDialog by rememberSaveable { mutableStateOf(false) }
@@ -359,6 +369,11 @@ fun ProductDetailScreen(
                     onClick = {
                         productDetailViewModel.handleAddToCart(quantity)
                         Log.v(tag, "Button Clicked")
+                        Toast.makeText(
+                            context,
+                            "Added to Cart",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Orange),
                 ) {

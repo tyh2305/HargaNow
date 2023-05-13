@@ -40,6 +40,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.harganow.domain.model.Address
 import com.example.harganow.domain.model.ItemPrice
 import com.example.harganow.presentation.announcement.AnnouncementScreen
 import com.example.harganow.presentation.cart.CartScreen
@@ -57,6 +58,7 @@ fun MyApp() {
     val navController = rememberNavController()
 
     val checkOutData: MutableList<Map<ItemPrice, Int>> = remember { mutableListOf() }
+    val addressData = remember { mutableStateOf<Address>(Address()) }
     val bottomBarState = rememberSaveable { mutableStateOf(false) }
 
     val items = listOf(
@@ -203,7 +205,9 @@ fun MyApp() {
             }
             composable("checkout") {
                 CheckOutScreen(
-                    navigateToPreviousStack = { handleBack() }, chosenList = checkOutData
+                    navController = navController,
+                    chosenList = checkOutData,
+                    address = addressData
                 )
             }
             composable("order") {
@@ -250,9 +254,10 @@ fun MyApp() {
                 )
             }
             composable("address") {
-                AddressScreen {
-
-                }
+                AddressScreen(
+                    navigateToPreviousStack = { navController.navigate("checkout") },
+                    address = addressData
+                )
             }
         }
     }
