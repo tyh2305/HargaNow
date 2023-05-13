@@ -76,7 +76,7 @@ fun ManageAccountScreen(
     scope.launch {
         loading = true
         userRepository.fetchUser()
-        nameFieldValue = userRepository.user.name ?: ""
+        nameFieldValue = userRepository.user.name ?: nameFieldValue
         loading = false
     }
 
@@ -91,9 +91,9 @@ fun ManageAccountScreen(
             titleSize = 64,
             navigateToPreviousStack = navigateToPreviousStack,
 
-        )
+            )
         // TODO: Pass name to info
-        Card(title = "Name", "HargaNow", 60,
+        Card(title = "Name", if (nameFieldValue != "") nameFieldValue else "Harga Now", 60,
             onClick = { nameDialogOpen = true })
         Card(
             title = "Change Password", "", 60,
@@ -108,7 +108,6 @@ fun ManageAccountScreen(
                     TextButton(
                         onClick = {
                             nameDialogOpen = false
-                            // TODO: Change name in the database
                             if (nameFieldValue.isEmpty()) {
                                 Toast.makeText(
                                     context,

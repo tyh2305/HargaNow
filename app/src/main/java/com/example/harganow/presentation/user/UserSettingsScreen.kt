@@ -84,6 +84,8 @@ fun UserSettingsScreen(
                         Toast.makeText(context, "Logout Failed", Toast.LENGTH_SHORT)
                             .show()
                     }
+
+                    else -> {}
                 }
             }
         }
@@ -104,14 +106,6 @@ fun UserSettingsScreen(
         SettingsCard(
             title = "Manage Account", 60,
             R.drawable.manage_accounts_black_24dp, onClick = navigateToManageAccount
-        )
-        SettingsCard(
-            title = "Edit Address", 60,
-            R.drawable.location_on_black_24dp, onClick = navigateToAddress
-        )
-        SettingsCard(
-            title = "Bank Accounts / Cards", 60,
-            R.drawable.account_balance_wallet_black_24dp, onClick = navigateToBankAccount
         )
         SettingsCard(
             title = "Policy", 60,
