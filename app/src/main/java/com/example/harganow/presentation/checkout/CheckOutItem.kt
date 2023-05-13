@@ -178,7 +178,7 @@ fun ShippingOption(
     modifier: Modifier = Modifier
 ) {
     var defaultShowValue = "Enter Address"
-    if (address.value.unitNumber != "") {
+    if (address.value.unitNumber != "" && address.value.unitNumber != null) {
         defaultShowValue = "Address Filled"
     }
 

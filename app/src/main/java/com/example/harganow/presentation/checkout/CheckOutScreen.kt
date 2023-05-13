@@ -64,8 +64,8 @@ fun CheckOutScreen(
             "Order placed successfully",
             Toast.LENGTH_SHORT
         ).show()
-        navController.navigate("home") {
-            popUpTo("home") {
+        navController.navigate("main") {
+            popUpTo("main") {
                 inclusive = true
             }
         }
@@ -78,6 +78,6 @@ fun CheckOutScreen(
         paymentOption = paymentOption,
         handleCheckout = { handleCheckout() },
         navigateToAddress = { navController.navigate("address") },
-        navigateToPreviousStack = { navigateToPreviousStack() },
+        navigateToPreviousStack = { navController.navigate("main") },
     )
 }
